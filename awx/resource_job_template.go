@@ -196,16 +196,12 @@ func resourceJobTemplate() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"execution_environment": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
 		},
-		//Importer: &schema.ResourceImporter{
-		//	State: schema.ImportStatePassthrough,
-		//},
-		//
-		//Timeouts: &schema.ResourceTimeout{
-		//	Create: schema.DefaultTimeout(1 * time.Minute),
-		//	Update: schema.DefaultTimeout(1 * time.Minute),
-		//	Delete: schema.DefaultTimeout(1 * time.Minute),
-		//},
 	}
 }
 
@@ -246,6 +242,7 @@ func resourceJobTemplateCreate(ctx context.Context, d *schema.ResourceData, m in
 		"diff_mode":                d.Get("diff_mode").(bool),
 		"allow_simultaneous":       d.Get("allow_simultaneous").(bool),
 		"custom_virtualenv":        AtoipOr(d.Get("custom_virtualenv").(string), nil),
+		"execution_environment":    AtoipOr(d.Get("execution_environment").(string), nil),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Template %v", err)
@@ -308,6 +305,7 @@ func resourceJobTemplateUpdate(ctx context.Context, d *schema.ResourceData, m in
 		"diff_mode":                d.Get("diff_mode").(bool),
 		"allow_simultaneous":       d.Get("allow_simultaneous").(bool),
 		"custom_virtualenv":        AtoipOr(d.Get("custom_virtualenv").(string), nil),
+		"execution_environment":    AtoipOr(d.Get("execution_environment").(string), nil),
 	}, map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
