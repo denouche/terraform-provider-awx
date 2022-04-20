@@ -73,9 +73,10 @@ func resourceWorkflowJobTemplate() *schema.Resource {
 				Default:  false,
 			},
 			"inventory_id": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Inventory applied as a prompt, assuming job template prompts for inventory.",
+				Description: "Inventory applied as a prompt, assuming job template prompts for inventory. (id, default=``)",
+				Default:     "",
 			},
 			"limit": {
 				Type:     schema.TypeString,
@@ -113,15 +114,6 @@ func resourceWorkflowJobTemplate() *schema.Resource {
 				Default:  "",
 			},
 		},
-		//Importer: &schema.ResourceImporter{
-		//	State: schema.ImportStatePassthrough,
-		//},
-		//
-		//Timeouts: &schema.ResourceTimeout{
-		//	Create: schema.DefaultTimeout(1 * time.Minute),
-		//	Update: schema.DefaultTimeout(1 * time.Minute),
-		//	Delete: schema.DefaultTimeout(1 * time.Minute),
-		//},
 	}
 }
 
@@ -134,7 +126,7 @@ func resourceWorkflowJobTemplateCreate(ctx context.Context, d *schema.ResourceDa
 		"name":                     d.Get("name").(string),
 		"description":              d.Get("description").(string),
 		"organization":             d.Get("organization_id").(int),
-		"inventory":                d.Get("inventory_id").(int),
+		"inventory":                AtoipOr(d.Get("inventory_id").(string), nil),
 		"extra_vars":               d.Get("variables").(string),
 		"survey_enabled":           d.Get("survey_enabled").(bool),
 		"allow_simultaneous":       d.Get("allow_simultaneous").(bool),
@@ -180,7 +172,7 @@ func resourceWorkflowJobTemplateUpdate(ctx context.Context, d *schema.ResourceDa
 		"name":                     d.Get("name").(string),
 		"description":              d.Get("description").(string),
 		"organization":             d.Get("organization_id").(int),
-		"inventory":                d.Get("inventory_id").(int),
+		"inventory":                AtoipOr(d.Get("inventory_id").(string), nil),
 		"extra_vars":               d.Get("variables").(string),
 		"survey_enabled":           d.Get("survey_enabled").(bool),
 		"allow_simultaneous":       d.Get("allow_simultaneous").(bool),

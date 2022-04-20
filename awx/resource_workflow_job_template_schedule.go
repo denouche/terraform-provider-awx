@@ -62,8 +62,9 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 				Default:  true,
 			},
 			"inventory": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)",
 			},
 		},
 	}
@@ -81,7 +82,7 @@ func resourceWorkflowJobTemplateScheduleCreate(ctx context.Context, d *schema.Re
 		"rrule":       d.Get("rrule").(string),
 		"description": d.Get("description").(string),
 		"enabled":     d.Get("enabled").(bool),
-		"inventory":   d.Get("inventory").(int),
+		"inventory":   AtoipOr(d.Get("inventory").(string), nil),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Schedule for WorkflowJobTemplate %d: %v", workflowJobTemplateID, err)
