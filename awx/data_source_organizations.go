@@ -1,10 +1,10 @@
 /*
-Use this data source to query Credential by ID.
+Use this data source to query Organizations.
 
 Example Usage
 
 ```hcl
-*TBD*
+data "awx_organizations" "all_orgs" {}
 ```
 
 */
@@ -20,11 +20,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceCredentials() *schema.Resource {
+func dataSourceOrganizations() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceCredentialsRead,
+		ReadContext: dataSourceOrganizationsRead,
 		Schema: map[string]*schema.Schema{
-			"credentials": {
+			"organizations": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
@@ -33,11 +33,7 @@ func dataSourceCredentials() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"username": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"kind": {
+						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -48,30 +44,29 @@ func dataSourceCredentials() *schema.Resource {
 	}
 }
 
-func dataSourceCredentialsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceOrganizationsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := m.(*awx.AWX)
 
-	creds, err := client.CredentialsService.ListCredentials(map[string]string{})
+	parsedOrgs := make([]map[string]interface{}, 0)
+
+	orgs, err := client.OrganizationsService.ListOrganizations(map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Unable to fetch credentials",
-			Detail:   "Unable to fetch credentials from AWX API",
+			Summary:  "Unable to fetch organizations",
+			Detail:   "Unable to fetch organizations from AWX API",
 		})
 		return diags
 	}
-
-	parsedCreds := make([]map[string]interface{}, 0)
-	for _, c := range creds {
-		parsedCreds = append(parsedCreds, map[string]interface{}{
-			"id":       c.ID,
-			"username": c.Inputs["username"],
-			"kind":     c.Kind,
+	for _, c := range orgs {
+		parsedOrgs = append(parsedOrgs, map[string]interface{}{
+			"id":   c.ID,
+			"name": c.Name,
 		})
 	}
 
-	err = d.Set("credentials", parsedCreds)
+	err = d.Set("organizations", parsedOrgs)
 	if err != nil {
 		return diag.FromErr(err)
 	}

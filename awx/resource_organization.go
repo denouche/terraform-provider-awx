@@ -159,7 +159,7 @@ func resourceOrganizationsDelete(ctx context.Context, d *schema.ResourceData, m 
 	return diags
 }
 
-func setOrganizationsResourceData(d *schema.ResourceData, r *awx.Organizations) *schema.ResourceData {
+func setOrganizationsResourceData(d *schema.ResourceData, r *awx.Organization) *schema.ResourceData {
 	d.Set("name", r.Name)
 	d.Set("description", r.Description)
 	d.Set("max_hosts", r.MaxHosts)

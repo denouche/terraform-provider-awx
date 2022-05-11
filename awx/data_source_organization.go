@@ -23,7 +23,7 @@ import (
 
 func dataSourceOrganization() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceOrganizationsRead,
+		ReadContext: dataSourceOrganizationRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeInt,
@@ -39,7 +39,7 @@ func dataSourceOrganization() *schema.Resource {
 	}
 }
 
-func dataSourceOrganizationsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceOrganizationRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := m.(*awx.AWX)
 	params := make(map[string]string)
@@ -58,7 +58,7 @@ func dataSourceOrganizationsRead(ctx context.Context, d *schema.ResourceData, m 
 		)
 		return diags
 	}
-	organizations, _, err := client.OrganizationsService.ListOrganizations(params)
+	organizations, err := client.OrganizationsService.ListOrganizations(params)
 	if err != nil {
 		return buildDiagnosticsMessage(
 			"Get: Fail to fetch Inventory Group",
