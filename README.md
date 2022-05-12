@@ -25,7 +25,7 @@ goreleaser build --snapshot --rm-dist
 
 ### 3) Copy Provider
 Copy the provider to user's `~/.terraform.d` folder.
-> Important: if building the provider in an operating system other than Linux x86_64, adjust the paths below replacing `linux_amd64` for the proper platform. E.g.: `darwin_amd64` for macOS.
+> Important: if building the provider in an operating system other than Linux x86_64, adjust the paths below replacing `linux_amd64` with the corresponding platform code. E.g.: `darwin_amd64` for macOS.
 
 ```sh
 mkdir -p ~/.terraform.d/plugins/github.com/denouche/awx/0.1/linux_amd64/terraform-provider-awx
