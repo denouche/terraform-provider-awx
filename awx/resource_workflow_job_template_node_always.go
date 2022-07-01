@@ -19,24 +19,24 @@ resource "awx_workflow_job_template_node_always" "k3s" {
 package awx
 
 import (
-    "context"
+	"context"
 
-    awx "github.com/denouche/goawx/client"
-    "github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-    "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	awx "github.com/denouche/goawx/client"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceWorkflowJobTemplateNodeAlways() *schema.Resource {
-    return &schema.Resource{
-        CreateContext: resourceWorkflowJobTemplateNodeAlwaysCreate,
-        ReadContext:   resourceWorkflowJobTemplateNodeRead,
-        UpdateContext: resourceWorkflowJobTemplateNodeUpdate,
-        DeleteContext: resourceWorkflowJobTemplateNodeDelete,
-        Schema:        workflowJobNodeSchema,
-    }
+	return &schema.Resource{
+		CreateContext: resourceWorkflowJobTemplateNodeAlwaysCreate,
+		ReadContext:   resourceWorkflowJobTemplateNodeRead,
+		UpdateContext: resourceWorkflowJobTemplateNodeUpdate,
+		DeleteContext: resourceWorkflowJobTemplateNodeDelete,
+		Schema:        workflowJobNodeSchema,
+	}
 }
 func resourceWorkflowJobTemplateNodeAlwaysCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-    client := m.(*awx.AWX)
-    awxService := client.WorkflowJobTemplateNodeAllwaysService
-    return createNodeForWorkflowJob(awxService, ctx, d, m)
+	client := m.(*awx.AWX)
+	awxService := client.WorkflowJobTemplateNodeAlwaysService
+	return createNodeForWorkflowJob(awxService, ctx, d, m)
 }
