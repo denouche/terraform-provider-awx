@@ -3,7 +3,10 @@ package awx
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"net/http"
+	"net/url"
+	"os"
 
 	awx "github.com/denouche/goawx/client"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -99,15 +102,33 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
 
-	client := http.DefaultClient
-	if d.Get("insecure").(bool) {
-		client.Transport = &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		}
-	}
-
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
+
+	client := http.DefaultClient
+	if d.Get("insecure").(bool) {
+		transport := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+
+		// Since we override the default configuration, we have to chech if a proxy is defined and use it
+		proxy_url, exist := os.LookupEnv("HTTPS_PROXY")
+		if exist {
+			url_i := url.URL{}
+			parsed_url, err := url_i.Parse(proxy_url)
+			if err != nil {
+				diags = append(diags, diag.Diagnostic{
+					Severity: diag.Error,
+					Summary:  "Wrong Proxy URL",
+					Detail:   fmt.Sprintf("The proxy URL is not valid: %s", proxy_url),
+				})
+				return nil, diags
+			}
+			transport.Proxy = http.ProxyURL(parsed_url)
+		}
+		client.Transport = transport
+	}
+
 	c, err := awx.NewAWX(hostname, username, password, client)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
