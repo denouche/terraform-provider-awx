@@ -177,10 +177,10 @@ func resourceProjectUpdate(ctx context.Context, d *schema.ResourceData, m interf
 	if d.Get("scm_credential_id").(int) > 0 {
 		credentials = strconv.Itoa(d.Get("scm_credential_id").(int))
 	}
-	_, err := awxService.UpdateProject(id, map[string]interface{}{
+
+	data := map[string]interface{}{
 		"name":                     d.Get("name").(string),
 		"description":              d.Get("description").(string),
-		"local_path":               d.Get("local_path").(string),
 		"scm_type":                 d.Get("scm_type").(string),
 		"scm_url":                  d.Get("scm_url").(string),
 		"scm_branch":               d.Get("scm_branch").(string),
@@ -190,7 +190,14 @@ func resourceProjectUpdate(ctx context.Context, d *schema.ResourceData, m interf
 		"organization":             d.Get("organization_id").(int),
 		"scm_update_on_launch":     d.Get("scm_update_on_launch").(bool),
 		"scm_update_cache_timeout": d.Get("scm_update_cache_timeout").(int),
-	}, map[string]string{})
+	}
+
+	// Cannot change local_path for git-based projects
+	if d.Get("local_path").(string) != "" && d.Get("scm_type").(string) != "git" {
+		data["local_path"] = d.Get("local_path").(string)
+	}
+
+	_, err := awxService.UpdateProject(id, data, map[string]string{})
 	if err != nil {
 		return buildDiagnosticsMessage("Update: Fail To Update Project", "Fail to get Project with ID %v, got %s", id, err.Error())
 	}
