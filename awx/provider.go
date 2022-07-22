@@ -35,6 +35,12 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("AWX_PASSWORD", "password"),
 			},
+			"token": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("AWX_TOKEN", ""),
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"awx_credential_azure_key_vault":                          resourceCredentialAzureKeyVault(),
@@ -98,6 +104,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	hostname := d.Get("hostname").(string)
 	username := d.Get("username").(string)
 	password := d.Get("password").(string)
+	token := d.Get("token").(string)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -109,7 +116,13 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		client.Transport = customTransport
 	}
 
-	c, err := awx.NewAWX(hostname, username, password, client)
+	var c *awx.AWX
+	var err error
+	if token != "" {
+		c, err = awx.NewAWXToken(hostname, token, client)
+	} else {
+		c, err = awx.NewAWX(hostname, username, password, client)
+	}
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
