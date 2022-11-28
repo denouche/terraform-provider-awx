@@ -4,16 +4,18 @@
 Example Usage
 
 ```hcl
-resource "awx_inventory" "myinv" {
-  name = "My Inventory"
-  ...
+resource "awx_job_template" "my_template" {
+  name           = "my_template"
+  job_type       = "run"
+  inventory_id   = awx_inventory.myinv.id
+  project_id     = awx_project.myproj.id
+  playbook       = "ansible/myplaybook.yml"
 }
 
-data "awx_inventory_role" "inv_admin_role" {
+data "awx_project_role" "template_admin_role" {
   name         = "Admin"
-  inventory_id = data.awx_inventory.myinv.id
+   project_id 	= awx_project.my_template.id
 }
-```
 
 */
 package awx
