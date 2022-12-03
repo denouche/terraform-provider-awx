@@ -143,11 +143,13 @@ func resourceInventorySourceCreate(ctx context.Context, d *schema.ResourceData, 
 		"source_regions":   d.Get("source_regions").(string),
 		"instance_filters": d.Get("instance_filters").(string),
 		"group_by":         d.Get("group_by").(string),
-		"source_project":   d.Get("source_project_id").(int),
 		"source_path":      d.Get("source_path").(string),
 	}
 	if _, ok := d.GetOk("credential_id"); ok {
 		createInventorySourceData["credential"] = d.Get("credential_id").(int)
+	}
+	if _, ok := d.GetOk("source_project_id"); ok {
+		createInventorySourceData["source_project"] = d.Get("source_project_id").(int)
 	}
 
 	result, err := awxService.CreateInventorySource(createInventorySourceData, map[string]string{})
