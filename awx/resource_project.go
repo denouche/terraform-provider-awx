@@ -1,24 +1,24 @@
 /*
-*TBD*
+Create a project.
 
 Example Usage
 
 ```hcl
 data "awx_organization" "default" {
-  name = "Default"
+    name = "Default"
 }
 
 resource "awx_project" "base_service_config" {
-  name                 = "base-service-configuration"
-  scm_type             = "git"
-  scm_url              = "https://github.com/nolte/ansible_playbook-baseline-online-server"
-  scm_branch           = "feature/centos8-v2"
-  scm_update_on_launch = true
-  organization_id      = data.awx_organization.default.id
+    name                 = "base-service-configuration"
+    organization_id      = data.awx_organization.default.id
+    scm_type             = "git"
+    scm_url              = "https://github.com/nolte/ansible_playbook-baseline-online-server"
+    scm_update_on_launch = true
 }
 ```
 
 */
+
 package awx
 
 import (
@@ -45,27 +45,23 @@ func resourceProject() *schema.Resource {
 				Required:    true,
 				Description: "Name of this project",
 			},
-
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "",
 				Description: "Optional description of this project.",
 			},
-
 			"local_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "",
 				Description: "Local path (relative to PROJECTS_ROOT) containing playbooks and related files for this project.",
 			},
-
 			"scm_type": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "One of \"\" (manual), git, hg, svn",
 			},
-
 			"scm_url": {
 				Type:        schema.TypeString,
 				Optional:    true,

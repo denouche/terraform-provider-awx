@@ -1,13 +1,18 @@
 /*
-*TBD*
+Create a GCE credential.
 
 Example Usage
 
 ```hcl
-*TBD*
-```
-
+resource "awx_credential_google_compute_engine" "default" {
+    name                = "acc-test"
+    organization_id     = 1
+    username            = "..."
+    project             = "..."
+    ssh_key_data        = "..."
+}
 */
+
 package awx
 
 import (

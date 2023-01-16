@@ -1,16 +1,17 @@
 /*
-*TBD*
+Associate a job template and a credential.
 
 Example Usage
 
 ```hcl
 resource "awx_job_template_credential" "baseconfig" {
-  job_template_id = awx_job_template.baseconfig.id
-  credential_id   = awx_credential_machine.pi_connection.id
+    job_template_id = data.awx_job_template.baseconfig.id
+    credential_id   = data.awx_credential_machine.pi_connection.id
 }
 ```
 
 */
+
 package awx
 
 import (
@@ -30,7 +31,6 @@ func resourceJobTemplateCredentials() *schema.Resource {
 		ReadContext:   resourceJobTemplateCredentialsRead,
 
 		Schema: map[string]*schema.Schema{
-
 			"job_template_id": {
 				Type:     schema.TypeInt,
 				Required: true,

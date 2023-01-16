@@ -1,5 +1,5 @@
 /*
-*TBD*
+Add a node regardless of the status of the previous step.
 
 Example Usage
 
@@ -16,6 +16,7 @@ resource "awx_workflow_job_template_node_always" "k3s" {
 ```
 
 */
+
 package awx
 
 import (

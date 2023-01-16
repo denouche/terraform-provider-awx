@@ -1,17 +1,22 @@
 /*
-*TBD*
+Schedule a job template.
+
+rrule field represents an iCal recurrence rule. More information can be found by reading this page: [iCal rrule](https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html)
 
 Example Usage
 
 ```hcl
+data
+
 resource "awx_schedule" "default" {
-  name                      = "schedule-test"
-  rrule                     = "DTSTART;TZID=Europe/Paris:20211214T120000 RRULE:INTERVAL=1;FREQ=DAILY"
-  unified_job_template_id   = awx_job_template.baseconfig.id
+    name                      = "schedule-test"
+    unified_job_template_id    = data.awx_job_template.baseconfig.id
+    rrule                     = "DTSTART;TZID=Europe/Paris:20211214T120000 RRULE:INTERVAL=1;FREQ=DAILY"
 }
 ```
 
 */
+
 package awx
 
 import (

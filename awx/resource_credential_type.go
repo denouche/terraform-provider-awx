@@ -1,13 +1,20 @@
 /*
-*TBD*
+Create a credential type.
 
 Example Usage
 
 ```hcl
-*TBD*
-```
-
+resource "awx_credential_type" "default" {
+    name      = "acc-test"
+    injectors = <<YAML
+...
+YAML
+    inputs    = <<YAML
+...
+YAML
+}
 */
+
 package awx
 
 import (

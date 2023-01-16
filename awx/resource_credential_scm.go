@@ -1,13 +1,17 @@
 /*
-*TBD*
+Create a sourec control credential.
 
 Example Usage
 
 ```hcl
-*TBD*
-```
-
+resource "awx_credential_scm" "default" {
+    name                = "acc-test"
+    organization_id     = 1
+    username            = "..."
+    password            = "..."
+}
 */
+
 package awx
 
 import (

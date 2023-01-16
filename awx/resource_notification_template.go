@@ -1,15 +1,29 @@
 /*
-*TBD*
+Create a notification template for an organization.
+
+The notification_type field can take different values:
+* email
+* grafana
+* irc
+* mattermost
+* pagerduty
+* rocketchat
+* slack
+* twilio
+* webhook
 
 Example Usage
 
 ```hcl
 resource "awx_notification_template" "default" {
-  name                      = "notification_template-test"
+    name            = "notification_template-test"
+    organization_id = 1
+    notification_type = "success"
 }
 ```
 
 */
+
 package awx
 
 import (

@@ -1,18 +1,20 @@
 /*
-*TBD*
+Schedule a workflow job template.
+
+rrule field represents an iCal recurrence rule. More information can be found by reading this page: [iCal rrule](https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html)
 
 Example Usage
 
 ```hcl
 resource "awx_workflow_job_template_schedule" "default" {
-  workflow_job_template_id      = awx_workflow_job_template.default.id
-
-  name                      = "schedule-test"
-  rrule                     = "DTSTART;TZID=Europe/Paris:20211214T120000 RRULE:INTERVAL=1;FREQ=DAILY"
+    workflow_job_template_id     = data.awx_workflow_job_template.default.id
+    name                        = "schedule-test"
+    rrule                       = "DTSTART;TZID=Europe/Paris:20211214T120000 RRULE:INTERVAL=1;FREQ=DAILY"
 }
 ```
 
 */
+
 package awx
 
 import (
@@ -33,13 +35,11 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 		UpdateContext: resourceScheduleUpdate,
 		DeleteContext: resourceScheduleDelete,
 		Schema: map[string]*schema.Schema{
-
 			"workflow_job_template_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				Description: "The workflow_job_template id for this schedule",
 			},
-
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,

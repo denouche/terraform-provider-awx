@@ -1,13 +1,20 @@
 /*
-*TBD*
+Add a source to an inventory.
 
 Example Usage
 
 ```hcl
-*TBD*
+resource "awx_inventory_source" "default" {
+    name                = "acc-test"
+    inventory_id        = 1
+    update_on_launch    = true
+    source_project_id   = 1
+    source_path         = "pbk.yml"
+}
 ```
 
 */
+
 package awx
 
 import (

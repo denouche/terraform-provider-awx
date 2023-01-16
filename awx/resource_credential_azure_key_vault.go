@@ -1,13 +1,19 @@
 /*
-*TBD*
+Create an Azure credential.
 
 Example Usage
 
 ```hcl
-*TBD*
-```
-
+resource "awx_credential_azure_key_vault" "default" {
+    name                = "acc-test"
+    organization_id     = 1
+    url                 = "..."
+    client              = "..."
+    secret              = "..."
+    tenant              = "..."
+}
 */
+
 package awx
 
 import (

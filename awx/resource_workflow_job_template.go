@@ -1,17 +1,22 @@
 /*
-*TBD*
+Create a workflow job template.
 
 Example Usage
 
 ```hcl
+data "awx_inventory" "default" {
+    name = "default"
+}
+
 resource "awx_workflow_job_template" "default" {
-  name            = "workflow-job"
-  organization_id = var.organization_id
-  inventory_id    = awx_inventory.default.id
+    name            = "workflow-job"
+    organization_id = var.organization_id
+    inventory_id    = data.awx_inventory.default.id
 }
 ```
 
 */
+
 package awx
 
 import (

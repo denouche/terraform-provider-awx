@@ -1,13 +1,21 @@
 /*
-*TBD*
+Create a credential.
 
 Example Usage
 
 ```hcl
-*TBD*
+resource "awx_credential" "default" {
+    name                = "acc-test"
+    organization_id     = 1
+    credential_type_id  = 1
+    inputs              = <<YAML
+...
+YAML
+}
 ```
 
 */
+
 package awx
 
 import (

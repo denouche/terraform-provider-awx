@@ -1,15 +1,16 @@
 /*
-*TBD*
+Create an organization.
 
 Example Usage
 
 ```hcl
 resource "awx_organization" "default" {
-  name            = "acc-test"
+    name = "acc-test"
 }
 ```
 
 */
+
 package awx
 
 import (

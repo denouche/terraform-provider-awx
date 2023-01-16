@@ -40,6 +40,7 @@ resource "awx_setting" "remote_host_headers" {
 ```
 
 */
+
 package awx
 
 import (

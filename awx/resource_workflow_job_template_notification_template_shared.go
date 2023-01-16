@@ -1,5 +1,9 @@
 package awx
 
+/*
+Base for workflow job template notification template.
+*/
+
 import (
 	"context"
 	"strconv"

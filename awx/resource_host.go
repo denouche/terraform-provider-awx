@@ -1,19 +1,17 @@
 /*
-*TBD*
+Create a host in an inventory.
 
 Example Usage
 
 ```hcl
+data "awx_inventory" "default" {
+    name = "Default"
+}
+
 resource "awx_host" "k3snode1" {
-  name         = "k3snode1"
-  description  = "pi node 1"
-  inventory_id = data.awx_inventory.default.id
-  group_ids = [
-    data.awx_inventory_group.default.id,
-    data.awx_inventory_group.pinodes.id,
-  ]
-  enabled   = true
-  variables = <<YAML
+    name         = "k3snode1"
+    inventory_id = data.awx_inventory.default.id
+    variables = <<YAML
 ---
 ansible_host: 192.168.178.29
 YAML
@@ -21,6 +19,7 @@ YAML
 ```
 
 */
+
 package awx
 
 import (
@@ -62,7 +61,7 @@ func resourceHost() *schema.Resource {
 			"enabled": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  "",
+				Default:  true,
 			},
 			"instance_id": {
 				Type:     schema.TypeString,

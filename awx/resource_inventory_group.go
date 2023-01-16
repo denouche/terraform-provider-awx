@@ -1,13 +1,16 @@
 /*
-*TBD*
+Create an inventory group.
 
 Example Usage
 
 ```hcl
-*TBD*
+resource "awx_inventory_group" "default" {
+    name = "acc-test"
+}
 ```
 
 */
+
 package awx
 
 import (

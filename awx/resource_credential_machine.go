@@ -1,12 +1,15 @@
 /*
-*TBD*
+Create a machine credential.
 
 Example Usage
 
 ```hcl
-*TBD*
-```
-
+resource "awx_credential_machine" "default" {
+    name                = "acc-test"
+    organization_id     = 1
+    username            = "..."
+    password            = "..."
+}
 */
 package awx
 

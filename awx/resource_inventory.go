@@ -1,17 +1,17 @@
 /*
-*TBD*
+Create an inventory for an organization.
 
 Example Usage
 
 ```hcl
 data "awx_organization" "default" {
-  name = "Default"
+    name = "Default"
 }
 
 resource "awx_inventory" "default" {
-  name            = "acc-test"
-  organization_id = data.awx_organization.default.id
-  variables       = <<YAML
+    name            = "acc-test"
+    organization_id = data.awx_organization.default.id
+    variables       = <<YAML
 ---
 system_supporters:
   - pi
@@ -20,6 +20,7 @@ YAML
 ```
 
 */
+
 package awx
 
 import (

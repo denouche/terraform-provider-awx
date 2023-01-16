@@ -1,13 +1,18 @@
 /*
-*TBD*
+Create a credential input source.
 
 Example Usage
 
 ```hcl
-*TBD*
+resource "awx_credential_input_source" "default" {
+    input_field_name     = "acc-test"
+    target              = 1
+    source              = 1
+}
 ```
 
 */
+
 package awx
 
 import (

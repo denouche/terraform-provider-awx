@@ -1,15 +1,17 @@
 /*
-*TBD*
+Create an execution environment.
 
 Example Usage
 
 ```hcl
 resource "awx_execution_environment" "default" {
-  name            = "acc-test"
+    name  = "acc-test"
+    image = "..."
 }
 ```
 
 */
+
 package awx
 
 import (
