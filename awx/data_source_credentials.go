@@ -1,10 +1,10 @@
 /*
-Use this data source to query Credential by ID.
+Use this data source to list credentials.
 
 Example Usage
 
 ```hcl
-*TBD*
+data "awx_credentials" "default" {}
 ```
 
 */

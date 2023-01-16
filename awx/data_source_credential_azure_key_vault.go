@@ -1,10 +1,12 @@
 /*
-*TBD*
+Use this data source to query Azure credential by ID.
 
 Example Usage
 
 ```hcl
-*TBD*
+data "awx_credential_azure_key_vault" "default" {
+    credential_id = 1
+}
 ```
 
 */
@@ -66,13 +68,23 @@ func dataSourceCredentialAzureRead(ctx context.Context, d *schema.ResourceData, 
 	var diags diag.Diagnostics
 
 	client := m.(*awx.AWX)
-	id, _ := d.Get("credential_id").(int)
-	cred, err := client.CredentialsService.GetCredentialsByID(id, map[string]string{})
+	credentialId := d.Get("credential_id").(int)
+
+	if credentialId == 0 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Get: Missing Parameters",
+			Detail:   "credential_id parameter is required.",
+		})
+		return diags
+	}
+
+	cred, err := client.CredentialsService.GetCredentialsByID(credentialId, map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "Unable to fetch credentials",
-			Detail:   fmt.Sprintf("Unable to credentials with id %d: %s", id, err.Error()),
+			Detail:   fmt.Sprintf("Unable to credentials with credentialId %d: %s", credentialId, err.Error()),
 		})
 		return diags
 	}

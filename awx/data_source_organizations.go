@@ -1,5 +1,5 @@
 /*
-Use this data source to query Organizations.
+Use this data source to list organizations.
 
 Example Usage
 

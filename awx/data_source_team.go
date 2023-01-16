@@ -1,11 +1,17 @@
 /*
-*TBD*
+Use this data source to list teams.
 
 Example Usage
 
 ```hcl
+data "awx_team" "default" {}
+
 data "awx_team" "default" {
-  name = "Default"
+    name = "Default"
+}
+
+data "awx_team" "default" {
+    id = 1
 }
 ```
 
@@ -51,13 +57,7 @@ func dataSourceTeamsRead(ctx context.Context, d *schema.ResourceData, m interfac
 		params["id"] = strconv.Itoa(teamID.(int))
 	}
 
-	if len(params) == 0 {
-		return buildDiagnosticsMessage(
-			"Get: Missing Parameters",
-			"Please use one of the selectors (name or id)",
-		)
-	}
-	Teams, _, err := client.TeamService.ListTeams(params)
+	teams, _, err := client.TeamService.ListTeams(params)
 	if err != nil {
 		return buildDiagnosticsMessage(
 			"Get: Fail to fetch Team",
@@ -65,16 +65,16 @@ func dataSourceTeamsRead(ctx context.Context, d *schema.ResourceData, m interfac
 			err.Error(),
 		)
 	}
-	if len(Teams) > 1 {
+	if len(teams) > 1 {
 		return buildDiagnosticsMessage(
 			"Get: find more than one Element",
 			"The Query Returns more than one team, %d",
-			len(Teams),
+			len(teams),
 		)
 	}
 
-	Team := Teams[0]
-	Entitlements, _, err := client.TeamService.ListTeamRoleEntitlements(Team.ID, make(map[string]string))
+	team := teams[0]
+	entitlements, _, err := client.TeamService.ListTeamRoleEntitlements(team.ID, make(map[string]string))
 	if err != nil {
 		return buildDiagnosticsMessage(
 			"Get: Failed to fetch team role entitlements",
@@ -83,6 +83,6 @@ func dataSourceTeamsRead(ctx context.Context, d *schema.ResourceData, m interfac
 		)
 	}
 
-	d = setTeamResourceData(d, Team, Entitlements)
+	d = setTeamResourceData(d, team, entitlements)
 	return diags
 }

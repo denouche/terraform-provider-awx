@@ -1,17 +1,16 @@
 /*
-*TBD*
+Use this data source to list project roles for a speficied project.
 
 Example Usage
 
 ```hcl
 resource "awx_project" "myproj" {
-  name = "My AWX Project"
-  ...
+    name = "My AWX Project"
 }
 
 data "awx_project_role" "proj_admins" {
-  name       = "Admin"
-  project_id = resource.awx_project.myproj.id
+    name       = "Admin"
+    project_id = resource.awx_project.myproj.id
 }
 ```
 
@@ -31,6 +30,10 @@ func dataSourceProjectRole() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceProjectRolesRead,
 		Schema: map[string]*schema.Schema{
+			"project_id": {
+				Type:     schema.TypeInt,
+				Required: true,
+			},
 			"id": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -41,10 +44,6 @@ func dataSourceProjectRole() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"project_id": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
 		},
 	}
 }
@@ -54,9 +53,17 @@ func dataSourceProjectRolesRead(ctx context.Context, d *schema.ResourceData, m i
 	client := m.(*awx.AWX)
 	params := make(map[string]string)
 
-	proj_id := d.Get("project_id").(int)
+	projectId := d.Get("project_id").(int)
+	if projectId == 0 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Get: Missing Parameters",
+			Detail:   "project_id parameter is required.",
+		})
+		return diags
+	}
 
-	Project, err := client.ProjectService.GetProjectByID(proj_id, params)
+	project, err := client.ProjectService.GetProjectByID(projectId, params)
 	if err != nil {
 		return buildDiagnosticsMessage(
 			"Get: Fail to fetch Project",
@@ -66,10 +73,10 @@ func dataSourceProjectRolesRead(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	roleslist := []*awx.ApplyRole{
-		Project.SummaryFields.ObjectRoles.UseRole,
-		Project.SummaryFields.ObjectRoles.AdminRole,
-		Project.SummaryFields.ObjectRoles.UpdateRole,
-		Project.SummaryFields.ObjectRoles.ReadRole,
+		project.SummaryFields.ObjectRoles.UseRole,
+		project.SummaryFields.ObjectRoles.AdminRole,
+		project.SummaryFields.ObjectRoles.UpdateRole,
+		project.SummaryFields.ObjectRoles.ReadRole,
 	}
 
 	if roleID, okID := d.GetOk("id"); okID {

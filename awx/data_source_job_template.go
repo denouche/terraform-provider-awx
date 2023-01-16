@@ -1,11 +1,17 @@
 /*
-*TBD*
+Use this data source to list job templates.
 
 Example Usage
 
 ```hcl
+data "awx_job_template" "default" {}
+
 data "awx_job_template" "default" {
-  name = "Default"
+    name = "Default"
+}
+
+data "awx_job_template" "default" {
+    id = 1
 }
 ```
 
@@ -51,13 +57,6 @@ func dataSourceJobTemplateRead(ctx context.Context, d *schema.ResourceData, m in
 
 	if groupID, okGroupID := d.GetOk("id"); okGroupID {
 		params["id"] = strconv.Itoa(groupID.(int))
-	}
-
-	if len(params) == 0 {
-		return buildDiagnosticsMessage(
-			"Get: Missing Parameters",
-			"Please use one of the selectors (name or group_id)",
-		)
 	}
 
 	jobTemplate, _, err := client.JobTemplateService.ListJobTemplates(params)

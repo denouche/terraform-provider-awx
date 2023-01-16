@@ -1,11 +1,13 @@
 /*
-*TBD*
+Use this data source to list notification template.
 
 Example Usage
 
 ```hcl
+data "awx_notification_template" "default" {}
+
 data "awx_notification_template" "default" {
-  name            = "private_services"
+    name = "private_services"
 }
 ```
 
@@ -49,13 +51,6 @@ func dataSourceNotificationTemplatesRead(ctx context.Context, d *schema.Resource
 
 	if groupID, okID := d.GetOk("id"); okID {
 		params["id"] = strconv.Itoa(groupID.(int))
-	}
-
-	if len(params) == 0 {
-		return buildDiagnosticsMessage(
-			"Get: Missing Parameters",
-			"Please use one of the selectors (name or id)",
-		)
 	}
 
 	notificationTemplates, _, err := client.NotificationTemplatesService.List(params)

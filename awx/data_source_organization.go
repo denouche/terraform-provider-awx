@@ -1,11 +1,17 @@
 /*
-*TBD*
+Use this data source to list organizations.
 
 Example Usage
 
 ```hcl
+data "awx_organization" "default" {}
+
 data "awx_organization" "default" {
-  name = "Default"
+    name = "Default"
+}
+
+data "awx_organization" "default" {
+    id = 1
 }
 ```
 
@@ -15,6 +21,7 @@ package awx
 import (
 	"context"
 	"strconv"
+	"time"
 
 	awx "github.com/denouche/goawx/client"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -51,13 +58,6 @@ func dataSourceOrganizationRead(ctx context.Context, d *schema.ResourceData, m i
 		params["id"] = strconv.Itoa(groupID.(int))
 	}
 
-	if len(params) == 0 {
-		return buildDiagnosticsMessage(
-			"Get: Missing Parameters",
-			"Please use one of the selectors (name or group_id)",
-		)
-		return diags
-	}
 	organizations, err := client.OrganizationsService.ListOrganizations(params)
 	if err != nil {
 		return buildDiagnosticsMessage(
@@ -66,16 +66,12 @@ func dataSourceOrganizationRead(ctx context.Context, d *schema.ResourceData, m i
 			err.Error(),
 		)
 	}
-	if len(organizations) > 1 {
-		return buildDiagnosticsMessage(
-			"Get: find more than one Element",
-			"The Query Returns more than one organization, %d",
-			len(organizations),
-		)
-		return diags
+
+	if err := d.Set("organizations", organizations); err != nil {
+		return diag.FromErr(err)
 	}
 
-	organization := organizations[0]
-	d = setOrganizationsResourceData(d, organization)
+	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+
 	return diags
 }

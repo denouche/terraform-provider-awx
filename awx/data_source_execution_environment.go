@@ -1,11 +1,17 @@
 /*
-*TBD*
+Use this data source to list execution environments.
 
 Example Usage
 
 ```hcl
+data "awx_execution_environment" "default" {}
+
 data "awx_execution_environment" "default" {
-  name = "Default"
+    name = "Default"
+}
+
+data "awx_execution_environment" "default" {
+    id = 1
 }
 ```
 
@@ -51,13 +57,6 @@ func dataSourceExecutionEnvironmentsRead(ctx context.Context, d *schema.Resource
 		params["id"] = strconv.Itoa(groupID.(int))
 	}
 
-	if len(params) == 0 {
-		return buildDiagnosticsMessage(
-			"Get: Missing Parameters",
-			"Please use one of the selectors (name or group_id)",
-		)
-		return diags
-	}
 	executionEnvironments, _, err := client.ExecutionEnvironmentsService.ListExecutionEnvironments(params)
 	if err != nil {
 		return buildDiagnosticsMessage(

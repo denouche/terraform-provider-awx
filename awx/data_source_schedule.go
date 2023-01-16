@@ -1,11 +1,17 @@
 /*
-*TBD*
+Use this data source to list schedules.
 
 Example Usage
 
 ```hcl
+data "awx_schedule" "default" {}
+
 data "awx_schedule" "default" {
-  name            = "private_services"
+    name = "private_services"
+}
+
+data "awx_schedule" "default" {
+    id = 1
 }
 ```
 
@@ -49,13 +55,6 @@ func dataSourceSchedulesRead(ctx context.Context, d *schema.ResourceData, m inte
 
 	if groupID, okID := d.GetOk("id"); okID {
 		params["id"] = strconv.Itoa(groupID.(int))
-	}
-
-	if len(params) == 0 {
-		return buildDiagnosticsMessage(
-			"Get: Missing Parameters",
-			"Please use one of the selectors (name or id)",
-		)
 	}
 
 	schedules, _, err := client.ScheduleService.List(params)

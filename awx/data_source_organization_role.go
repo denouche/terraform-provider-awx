@@ -1,17 +1,16 @@
 /*
-*TBD*
+Use this data source to list organization roles for a specified organization.
 
 Example Usage
 
 ```hcl
 resource "awx_organization" "myorg" {
-  name = "My AWX Org"
-  ...
+    name = "My AWX Org"
 }
 
 data "awx_organization_role" "org_admins" {
-  name            = "Admin"
-  organization_id = resource.awx_organization.myorg.id
+    name            = "Admin"
+    organization_id = resource.awx_organization.myorg.id
 }
 ```
 
@@ -31,6 +30,10 @@ func dataSourceOrganizationRole() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceOrganizationRolesRead,
 		Schema: map[string]*schema.Schema{
+			"organization_id": {
+				Type:     schema.TypeInt,
+				Required: true,
+			},
 			"id": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -41,10 +44,6 @@ func dataSourceOrganizationRole() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"organization_id": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
 		},
 	}
 }
@@ -54,9 +53,17 @@ func dataSourceOrganizationRolesRead(ctx context.Context, d *schema.ResourceData
 	client := m.(*awx.AWX)
 	params := make(map[string]string)
 
-	org_id := d.Get("organization_id").(int)
+	orgId := d.Get("organization_id").(int)
+	if orgId == 0 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Get: Missing Parameters",
+			Detail:   "organization_id parameter is required.",
+		})
+		return diags
+	}
 
-	organization, err := client.OrganizationsService.GetOrganizationsByID(org_id, params)
+	organization, err := client.OrganizationsService.GetOrganizationsByID(orgId, params)
 	if err != nil {
 		return buildDiagnosticsMessage(
 			"Get: Fail to fetch organization role",

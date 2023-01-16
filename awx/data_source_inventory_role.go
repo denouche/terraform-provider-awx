@@ -1,17 +1,17 @@
 /*
-*TBD*
+Use this data source to list inventory roles for a specified inventory.
 
 Example Usage
 
 ```hcl
-resource "awx_inventory" "myinv" {
-  name = "My Inventory"
+data "awx_inventory" "myinv" {
+    name = "My Inventory"
   ...
 }
 
 data "awx_inventory_role" "inv_admin_role" {
-  name         = "Admin"
-  inventory_id = data.awx_inventory.myinv.id
+    name         = "Admin"
+    inventory_id = data.awx_inventory.myinv.id
 }
 ```
 
@@ -31,6 +31,10 @@ func dataSourceInventoryRole() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceInventoryRoleRead,
 		Schema: map[string]*schema.Schema{
+			"inventory_id": {
+				Type:     schema.TypeInt,
+				Required: true,
+			},
 			"id": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -41,10 +45,6 @@ func dataSourceInventoryRole() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"inventory_id": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
 		},
 	}
 }
@@ -54,8 +54,17 @@ func dataSourceInventoryRoleRead(ctx context.Context, d *schema.ResourceData, m 
 	client := m.(*awx.AWX)
 	params := make(map[string]string)
 
-	inv_id := d.Get("inventory_id").(int)
-	inventory, err := client.InventoriesService.GetInventoryByID(inv_id, params)
+	inventoryId := d.Get("inventory_id").(int)
+	if inventoryId == 0 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Get: Missing Parameters",
+			Detail:   "inventory_id parameter is required.",
+		})
+		return diags
+	}
+
+	inventory, err := client.InventoriesService.GetInventoryByID(inventoryId, params)
 	if err != nil {
 		return buildDiagnosticsMessage(
 			"Get: Fail to fetch Inventory",
