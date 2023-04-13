@@ -50,7 +50,7 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 			},
 			"unified_job_template_id": {
 				Type:     schema.TypeInt,
-				Required: true,
+				Required: false,
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -65,6 +65,13 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)",
+			},
+            "extra_data": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "",
+				StateFunc:   normalizeJsonYaml,
 			},
 		},
 	}
@@ -83,6 +90,7 @@ func resourceWorkflowJobTemplateScheduleCreate(ctx context.Context, d *schema.Re
 		"description": d.Get("description").(string),
 		"enabled":     d.Get("enabled").(bool),
 		"inventory":   AtoipOr(d.Get("inventory").(string), nil),
+        "extra_data":  d.Get("extra_data").(string),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Schedule for WorkflowJobTemplate %d: %v", workflowJobTemplateID, err)
