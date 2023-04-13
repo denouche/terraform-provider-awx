@@ -50,7 +50,7 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 			},
 			"unified_job_template_id": {
 				Type:     schema.TypeInt,
-				Required: false,
+				Optional: true,
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -70,7 +70,7 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "",
-				Description: "",
+                Description: "Extra data to be pass for the scheudle (same like extra_vars)",
 				StateFunc:   normalizeJsonYaml,
 			},
 		},
