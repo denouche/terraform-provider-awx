@@ -9,6 +9,9 @@ resource "awx_workflow_job_template_schedule" "default" {
 
   name                      = "schedule-test"
   rrule                     = "DTSTART;TZID=Europe/Paris:20211214T120000 RRULE:INTERVAL=1;FREQ=DAILY"
+  extra_data                = <<EOL
+organization_name: testorg
+EOL
 }
 ```
 
@@ -39,7 +42,6 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 				Required:    true,
 				Description: "The workflow_job_template id for this schedule",
 			},
-
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -66,12 +68,11 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 				Optional:    true,
 				Description: "Inventory applied as a prompt, assuming job template prompts for inventory (id, default=``)",
 			},
-            "extra_data": {
+			"extra_data": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "",
-                Description: "Extra data to be pass for the scheudle (same like extra_vars)",
-				StateFunc:   normalizeJsonYaml,
+				Description: "Extra data to be pass for the schedule (YAML format)",
 			},
 		},
 	}
@@ -90,7 +91,7 @@ func resourceWorkflowJobTemplateScheduleCreate(ctx context.Context, d *schema.Re
 		"description": d.Get("description").(string),
 		"enabled":     d.Get("enabled").(bool),
 		"inventory":   AtoipOr(d.Get("inventory").(string), nil),
-        "extra_data":  d.Get("extra_data").(string),
+		"extra_data":  unmarshalYaml(d.Get("extra_data").(string)),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Schedule for WorkflowJobTemplate %d: %v", workflowJobTemplateID, err)
