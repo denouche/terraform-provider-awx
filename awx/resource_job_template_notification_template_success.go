@@ -35,5 +35,8 @@ func resourceJobTemplateNotificationTemplateSuccess() *schema.Resource {
 				ForceNew: true,
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
