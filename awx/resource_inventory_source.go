@@ -215,8 +215,8 @@ func resourceInventorySourceDelete(ctx context.Context, d *schema.ResourceData, 
 	}
 	if _, err := awxService.DeleteInventorySource(id); err != nil {
 		return buildDiagDeleteFail(
-			"inventroy source",
-			fmt.Sprintf("inventroy source %v, got %s ",
+			"inventory source",
+			fmt.Sprintf("inventory source %v, got %s ",
 				id, err.Error()))
 	}
 	d.SetId("")
