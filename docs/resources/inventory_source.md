@@ -26,6 +26,7 @@ The following arguments are supported:
 * `description` - (Optional) 
 * `enabled_value` - (Optional) 
 * `enabled_var` - (Optional) 
+* `execution_environment` - (Optional) 
 * `group_by` - (Optional) 
 * `host_filter` - (Optional) 
 * `instance_filters` - (Optional) 
