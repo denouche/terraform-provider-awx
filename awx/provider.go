@@ -67,6 +67,7 @@ func Provider() *schema.Provider {
 			"awx_notification_template":                               resourceNotificationTemplate(),
 			"awx_organization":                                        resourceOrganization(),
 			"awx_organization_galaxy_credential":                      resourceOrganizationsGalaxyCredentials(),
+			"awx_organization_instance_groups":                        resourceOrganizationsInstanceGroups(),
 			"awx_project":                                             resourceProject(),
 			"awx_schedule":                                            resourceSchedule(),
 			"awx_settings_ldap_team_map":                              resourceSettingsLDAPTeamMap(),
