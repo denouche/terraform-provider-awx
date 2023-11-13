@@ -13,7 +13,6 @@ organization_name: testorg
 EOL
 }
 ```
-
 */
 package awx
 
@@ -67,6 +66,9 @@ func resourceSchedule() *schema.Resource {
 				Default:     "",
 				Description: "Extra data to be pass for the schedule (YAML format)",
 			},
+		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }
