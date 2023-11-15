@@ -41,6 +41,14 @@ func dataSourceCredentials() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"description": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 					},
 				},
 			},
@@ -65,9 +73,11 @@ func dataSourceCredentialsRead(ctx context.Context, d *schema.ResourceData, m in
 	parsedCreds := make([]map[string]interface{}, 0)
 	for _, c := range creds {
 		parsedCreds = append(parsedCreds, map[string]interface{}{
-			"id":       c.ID,
-			"username": c.Inputs["username"],
-			"kind":     c.Kind,
+			"id":          c.ID,
+			"username":    c.Inputs["username"],
+			"kind":        c.Kind,
+			"description": c.Description,
+			"name":        c.Name,
 		})
 	}
 

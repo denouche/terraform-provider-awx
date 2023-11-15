@@ -39,6 +39,14 @@ func dataSourceCredentialByID() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"description": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -60,6 +68,8 @@ func dataSourceCredentialByIDRead(ctx context.Context, d *schema.ResourceData, m
 	d.Set("username", cred.Inputs["username"])
 	d.Set("kind", cred.Kind)
 	d.Set("tower_id", id)
+	d.Set("description", cred.Description)
+	d.Set("name", cred.Name)
 	d.SetId(strconv.Itoa(id))
 	// d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 
