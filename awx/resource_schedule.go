@@ -8,6 +8,9 @@ resource "awx_schedule" "default" {
   name                      = "schedule-test"
   rrule                     = "DTSTART;TZID=Europe/Paris:20211214T120000 RRULE:INTERVAL=1;FREQ=DAILY"
   unified_job_template_id   = awx_job_template.baseconfig.id
+  extra_data                = <<EOL
+organization_name: testorg
+EOL
 }
 ```
 
@@ -58,6 +61,12 @@ func resourceSchedule() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
+			"extra_data": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "Extra data to be pass for the schedule (YAML format)",
+			},
 		},
 	}
 }
@@ -74,6 +83,7 @@ func resourceScheduleCreate(ctx context.Context, d *schema.ResourceData, m inter
 		"description":          d.Get("description").(string),
 		"enabled":              d.Get("enabled").(bool),
 		"inventory":            d.Get("inventory").(int),
+		"extra_data":           unmarshalYaml(d.Get("extra_data").(string)),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Schedule %v", err)
@@ -111,6 +121,7 @@ func resourceScheduleUpdate(ctx context.Context, d *schema.ResourceData, m inter
 		"description":          d.Get("description").(string),
 		"enabled":              d.Get("enabled").(bool),
 		"inventory":            d.Get("inventory").(int),
+		"extra_data":           unmarshalYaml(d.Get("extra_data").(string)),
 	}, map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -167,6 +178,7 @@ func setScheduleResourceData(d *schema.ResourceData, r *awx.Schedule) *schema.Re
 	d.Set("description", r.Description)
 	d.Set("enabled", r.Enabled)
 	d.Set("inventory", r.Inventory)
+	d.Set("extra_data", marshalYaml(r.ExtraData))
 	d.SetId(strconv.Itoa(r.ID))
 	return d
 }

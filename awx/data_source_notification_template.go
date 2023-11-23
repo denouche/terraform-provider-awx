@@ -73,6 +73,13 @@ func dataSourceNotificationTemplatesRead(ctx context.Context, d *schema.Resource
 			len(notificationTemplates),
 		)
 	}
+	if len(notificationTemplates) == 0 {
+		return buildDiagnosticsMessage(
+			"Get: Notification Template does not exist",
+			"The Query Returns no Notification Template matching filter %v",
+			params,
+		)
+	}
 
 	notificationTemplate := notificationTemplates[0]
 	d = setNotificationTemplateResourceData(d, notificationTemplate)

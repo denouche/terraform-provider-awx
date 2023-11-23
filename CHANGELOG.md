@@ -1,3 +1,47 @@
+## [0.22.6](https://github.com/denouche/terraform-provider-awx/compare/v0.22.5...v0.22.6) (2023-11-23)
+
+## [0.22.5](https://github.com/denouche/terraform-provider-awx/compare/v0.22.4...v0.22.5) (2023-11-23)
+
+
+### Bug Fixes
+
+* segmentation fault when datasource does not exist ([fa53eac](https://github.com/denouche/terraform-provider-awx/commit/fa53eac9aa1ec3be4ceedda15e6b6a2173c9ed18))
+
+## [0.22.4](https://github.com/denouche/terraform-provider-awx/compare/v0.22.3...v0.22.4) (2023-11-23)
+
+## [0.22.3](https://github.com/denouche/terraform-provider-awx/compare/v0.22.2...v0.22.3) (2023-11-23)
+
+## [0.22.2](https://github.com/denouche/terraform-provider-awx/compare/v0.22.1...v0.22.2) (2023-11-23)
+
+## [0.22.1](https://github.com/denouche/terraform-provider-awx/compare/v0.22.0...v0.22.1) (2023-11-23)
+
+# [0.22.0](https://github.com/denouche/terraform-provider-awx/compare/v0.21.0...v0.22.0) (2023-11-23)
+
+
+### Features
+
+* **resource_job_template_launch:** add extra_vars option ([3e4ab25](https://github.com/denouche/terraform-provider-awx/commit/3e4ab257f760fd5aca4f206ff1d00d2467f4652f))
+* **resource_job_template_launch:** add more configuration options (limit, inventory, completion wait) ([abe120c](https://github.com/denouche/terraform-provider-awx/commit/abe120ce93029b02b9b34f29be4615e430a9d8c5))
+
+# [0.21.0](https://github.com/denouche/terraform-provider-awx/compare/v0.20.0...v0.21.0) (2023-04-17)
+
+
+### Features
+
+* schedule extra data ([1d60ab8](https://github.com/denouche/terraform-provider-awx/commit/1d60ab86f97446abdca431020d0e4e4537096e04))
+
+# [0.20.0](https://github.com/denouche/terraform-provider-awx/compare/v0.19.0...v0.20.0) (2023-04-13)
+
+
+### Bug Fixes
+
+* resource data description ([bd38f22](https://github.com/denouche/terraform-provider-awx/commit/bd38f22a2b5f1a0828998ccc555d1879588510b5))
+
+
+### Features
+
+* extra_data to workflow schedule schema ([df67648](https://github.com/denouche/terraform-provider-awx/commit/df6764890be3007f09f284e59f7bbef8eac2586c))
+
 # [0.19.0](https://github.com/denouche/terraform-provider-awx/compare/v0.18.0...v0.19.0) (2022-11-14)
 
 
