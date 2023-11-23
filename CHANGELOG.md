@@ -1,3 +1,64 @@
+## [0.24.3](https://github.com/denouche/terraform-provider-awx/compare/v0.24.2...v0.24.3) (2023-11-23)
+
+
+### Bug Fixes
+
+* allow empty credential_id for inventory_source creation ([b960b53](https://github.com/denouche/terraform-provider-awx/commit/b960b538a60d7d28c566eac3c887985d58bf4d6a)), closes [#19](https://github.com/denouche/terraform-provider-awx/issues/19)
+* allow empty source_project_id for inventory_source creation ([#29](https://github.com/denouche/terraform-provider-awx/issues/29)) ([4d8d1d8](https://github.com/denouche/terraform-provider-awx/commit/4d8d1d8de62b50e0f9614175f993e10a4c92c609))
+
+## [0.24.2](https://github.com/denouche/terraform-provider-awx/compare/v0.24.1...v0.24.2) (2023-11-23)
+
+
+### Bug Fixes
+
+* fix compilation issue in resource project ([45771cd](https://github.com/denouche/terraform-provider-awx/commit/45771cd8ec7b9409c073fb7110105788d546e586))
+
+## [0.24.1](https://github.com/denouche/terraform-provider-awx/compare/v0.24.0...v0.24.1) (2023-11-23)
+
+
+### Bug Fixes
+
+* fix resource project ([6519171](https://github.com/denouche/terraform-provider-awx/commit/651917165ca66be157b428558a4e1932b294e01c))
+
+# [0.24.0](https://github.com/denouche/terraform-provider-awx/compare/v0.23.0...v0.24.0) (2023-11-23)
+
+
+### Features
+
+* add Organizations GalaxyCredentials, resource credential Ansible Galaxy, user resource, organization role, Gitlab credential, resource settings, instance group support ([5a30c50](https://github.com/denouche/terraform-provider-awx/commit/5a30c505fb9d2e4fdc6b72b080e16effaf47d1d4))
+
+# [0.23.0](https://github.com/denouche/terraform-provider-awx/compare/v0.22.6...v0.23.0) (2023-11-23)
+
+
+### Features
+
+* add allow_override for awx_project. ([#30](https://github.com/denouche/terraform-provider-awx/issues/30)) ([285bb45](https://github.com/denouche/terraform-provider-awx/commit/285bb45ef85e9988434fb95d1b711fd411247217))
+
+## [0.22.6](https://github.com/denouche/terraform-provider-awx/compare/v0.22.5...v0.22.6) (2023-11-23)
+
+## [0.22.5](https://github.com/denouche/terraform-provider-awx/compare/v0.22.4...v0.22.5) (2023-11-23)
+
+
+### Bug Fixes
+
+* segmentation fault when datasource does not exist ([fa53eac](https://github.com/denouche/terraform-provider-awx/commit/fa53eac9aa1ec3be4ceedda15e6b6a2173c9ed18))
+
+## [0.22.4](https://github.com/denouche/terraform-provider-awx/compare/v0.22.3...v0.22.4) (2023-11-23)
+
+## [0.22.3](https://github.com/denouche/terraform-provider-awx/compare/v0.22.2...v0.22.3) (2023-11-23)
+
+## [0.22.2](https://github.com/denouche/terraform-provider-awx/compare/v0.22.1...v0.22.2) (2023-11-23)
+
+## [0.22.1](https://github.com/denouche/terraform-provider-awx/compare/v0.22.0...v0.22.1) (2023-11-23)
+
+# [0.22.0](https://github.com/denouche/terraform-provider-awx/compare/v0.21.0...v0.22.0) (2023-11-23)
+
+
+### Features
+
+* **resource_job_template_launch:** add extra_vars option ([3e4ab25](https://github.com/denouche/terraform-provider-awx/commit/3e4ab257f760fd5aca4f206ff1d00d2467f4652f))
+* **resource_job_template_launch:** add more configuration options (limit, inventory, completion wait) ([abe120c](https://github.com/denouche/terraform-provider-awx/commit/abe120ce93029b02b9b34f29be4615e430a9d8c5))
+
 # [0.21.0](https://github.com/denouche/terraform-provider-awx/compare/v0.20.0...v0.21.0) (2023-04-17)
 
 

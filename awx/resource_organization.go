@@ -52,6 +52,12 @@ func resourceOrganization() *schema.Resource {
 				Optional:    true,
 				Description: "Local absolute file path containing a custom Python virtualenv to use",
 			},
+			"default_environment": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "The default execution environment for jobs run by this organization.",
+			},
 		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -71,10 +77,11 @@ func resourceOrganizationsCreate(ctx context.Context, d *schema.ResourceData, m 
 	awxService := client.OrganizationsService
 
 	result, err := awxService.CreateOrganization(map[string]interface{}{
-		"name":              d.Get("name").(string),
-		"description":       d.Get("description").(string),
-		"max_hosts":         d.Get("max_hosts").(int),
-		"custom_virtualenv": d.Get("description").(string),
+		"name":                d.Get("name").(string),
+		"description":         d.Get("description").(string),
+		"max_hosts":           d.Get("max_hosts").(int),
+		"custom_virtualenv":   d.Get("description").(string),
+		"default_environment": d.Get("default_environment").(int),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Organization %v", err)
@@ -107,10 +114,11 @@ func resourceOrganizationsUpdate(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	_, err = awxService.UpdateOrganization(id, map[string]interface{}{
-		"name":              d.Get("name").(string),
-		"description":       d.Get("description").(string),
-		"max_hosts":         d.Get("max_hosts").(int),
-		"custom_virtualenv": d.Get("description").(string),
+		"name":                d.Get("name").(string),
+		"description":         d.Get("description").(string),
+		"max_hosts":           d.Get("max_hosts").(int),
+		"custom_virtualenv":   d.Get("description").(string),
+		"default_environment": d.Get("default_environment").(int),
 	}, map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

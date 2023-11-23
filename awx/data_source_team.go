@@ -65,11 +65,20 @@ func dataSourceTeamsRead(ctx context.Context, d *schema.ResourceData, m interfac
 			err.Error(),
 		)
 	}
+
 	if len(Teams) > 1 {
 		return buildDiagnosticsMessage(
 			"Get: find more than one Element",
 			"The Query Returns more than one team, %d",
 			len(Teams),
+		)
+	}
+
+	if len(Teams) == 0 {
+		return buildDiagnosticsMessage(
+			"Get: Team does not exist",
+			"The Query Returns no Team matching filter %v",
+			params,
 		)
 	}
 

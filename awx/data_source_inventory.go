@@ -63,25 +63,31 @@ func dataSourceInventoriesRead(ctx context.Context, d *schema.ResourceData, m in
 	if len(params) == 0 {
 		return buildDiagnosticsMessage(
 			"Get: Missing Parameters",
-			"Please use one of the selectors (name or group_id)",
+			"Please use one of the selectors (name or id)",
 		)
-		return diags
 	}
 	inventories, _, err := client.InventoriesService.ListInventories(params)
 	if err != nil {
 		return buildDiagnosticsMessage(
-			"Get: Fail to fetch Inventory Group",
-			"Fail to find the group got: %s",
+			"Get: Fail to fetch Inventory",
+			"Fail to find the inventory got: %s",
 			err.Error(),
 		)
 	}
 	if len(inventories) > 1 {
 		return buildDiagnosticsMessage(
 			"Get: find more than one Element",
-			"The Query Returns more than one Group, %d",
+			"The Query Returns more than one Inventory, %d",
 			len(inventories),
 		)
-		return diags
+	}
+
+	if len(inventories) == 0 {
+		return buildDiagnosticsMessage(
+			"Get: Inventory does not exist",
+			"The Query Returns no Inventory matching filter %v",
+			params,
+		)
 	}
 
 	inventory := inventories[0]

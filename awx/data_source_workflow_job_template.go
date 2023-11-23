@@ -74,11 +74,18 @@ func dataSourceWorkflowJobTemplateRead(ctx context.Context, d *schema.ResourceDa
 		}
 	}
 	if _, okGroupID := d.GetOk("id"); okGroupID {
-		if len(workflowJobTemplate) != 1 {
+		if len(workflowJobTemplate) > 1 {
 			return buildDiagnosticsMessage(
 				"Get: find more than one Element",
 				"The Query Returns more than one Group, %d",
 				len(workflowJobTemplate),
+			)
+		}
+		if len(workflowJobTemplate) == 0 {
+			return buildDiagnosticsMessage(
+				"Get: Workflow template does not exist",
+				"The Query Returns no Workflow template matching filter %v",
+				params,
 			)
 		}
 		d = setWorkflowJobTemplateResourceData(d, workflowJobTemplate[0])

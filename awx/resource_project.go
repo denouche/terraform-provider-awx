@@ -1,23 +1,24 @@
 /*
 *TBD*
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "awx_organization" "default" {
-  name = "Default"
-}
 
-resource "awx_project" "base_service_config" {
-  name                 = "base-service-configuration"
-  scm_type             = "git"
-  scm_url              = "https://github.com/nolte/ansible_playbook-baseline-online-server"
-  scm_branch           = "feature/centos8-v2"
-  scm_update_on_launch = true
-  organization_id      = data.awx_organization.default.id
-}
+	data "awx_organization" "default" {
+	  name = "Default"
+	}
+
+	resource "awx_project" "base_service_config" {
+	  name                 = "base-service-configuration"
+	  scm_type             = "git"
+	  scm_url              = "https://github.com/nolte/ansible_playbook-baseline-online-server"
+	  scm_branch           = "feature/centos8-v2"
+	  scm_update_on_launch = true
+	  organization_id      = data.awx_organization.default.id
+	}
+
 ```
-
 */
 package awx
 
@@ -108,6 +109,12 @@ func resourceProject() *schema.Resource {
 				Optional: true,
 				Default:  0,
 			},
+			"allow_override": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Allow SCM branch override",
+			},
 		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -156,6 +163,7 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 
 		"scm_update_on_launch":     d.Get("scm_update_on_launch").(bool),
 		"scm_update_cache_timeout": d.Get("scm_update_cache_timeout").(int),
+		"allow_override":           d.Get("allow_override").(bool),
 	}, map[string]string{})
 	if err != nil {
 		return buildDiagnosticsMessage("Create: Project not created", "Project with name %s  in the Organization ID %v not created, %s", projectName, orgID, err.Error())
@@ -190,6 +198,7 @@ func resourceProjectUpdate(ctx context.Context, d *schema.ResourceData, m interf
 		"organization":             d.Get("organization_id").(int),
 		"scm_update_on_launch":     d.Get("scm_update_on_launch").(bool),
 		"scm_update_cache_timeout": d.Get("scm_update_cache_timeout").(int),
+		"allow_override":           d.Get("allow_override").(bool),
 	}
 
 	// Cannot change local_path for git-based projects
@@ -285,6 +294,7 @@ func setProjectResourceData(d *schema.ResourceData, r *awx.Project) *schema.Reso
 	}
 	d.Set("scm_update_on_launch", r.ScmUpdateOnLaunch)
 	d.Set("scm_update_cache_timeout", r.ScmUpdateCacheTimeout)
+	d.Set("allow_override", r.AllowOverride)
 
 	d.SetId(strconv.Itoa(r.ID))
 	return d

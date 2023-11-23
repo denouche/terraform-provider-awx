@@ -56,7 +56,6 @@ func dataSourceOrganizationRead(ctx context.Context, d *schema.ResourceData, m i
 			"Get: Missing Parameters",
 			"Please use one of the selectors (name or group_id)",
 		)
-		return diags
 	}
 	organizations, err := client.OrganizationsService.ListOrganizations(params)
 	if err != nil {
@@ -72,7 +71,13 @@ func dataSourceOrganizationRead(ctx context.Context, d *schema.ResourceData, m i
 			"The Query Returns more than one organization, %d",
 			len(organizations),
 		)
-		return diags
+	}
+	if len(organizations) == 0 {
+		return buildDiagnosticsMessage(
+			"Get: Organization does not exist",
+			"The Query Returns no Organization matching filter %v",
+			params,
+		)
 	}
 
 	organization := organizations[0]

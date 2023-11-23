@@ -57,7 +57,7 @@ func dataSourceProjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 			"Please use one of the selectors (name or group_id)",
 		)
 	}
-	Projects, _, err := client.ProjectService.ListProjects(params)
+	projects, _, err := client.ProjectService.ListProjects(params)
 	if err != nil {
 		return buildDiagnosticsMessage(
 			"Get: Fail to fetch Inventory Group",
@@ -65,15 +65,22 @@ func dataSourceProjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 			err.Error(),
 		)
 	}
-	if len(Projects) > 1 {
+	if len(projects) > 1 {
 		return buildDiagnosticsMessage(
 			"Get: find more than one Element",
 			"The Query Returns more than one Group, %d",
-			len(Projects),
+			len(projects),
+		)
+	}
+	if len(projects) == 0 {
+		return buildDiagnosticsMessage(
+			"Get: Project does not exist",
+			"The Query Returns no Project matching filter %v",
+			params,
 		)
 	}
 
-	Project := Projects[0]
-	d = setProjectResourceData(d, Project)
+	project := projects[0]
+	d = setProjectResourceData(d, project)
 	return diags
 }

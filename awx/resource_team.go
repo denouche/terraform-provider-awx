@@ -134,7 +134,7 @@ func resourceTeamCreate(ctx context.Context, d *schema.ResourceData, m interface
 
 	if rent, entOk := d.GetOk("role_entitlement"); entOk {
 		entset := rent.(*schema.Set).List()
-		err := roleEntitlementUpdate(m, result.ID, entset, false)
+		err := roleTeamEntitlementUpdate(m, result.ID, entset, false)
 		if err != nil {
 			return buildDiagnosticsMessage(
 				"Create: team role entitlement not created",
@@ -146,7 +146,7 @@ func resourceTeamCreate(ctx context.Context, d *schema.ResourceData, m interface
 	return resourceTeamRead(ctx, d, m)
 }
 
-func roleEntitlementUpdate(m interface{}, team_id int, roles []interface{}, remove bool) error {
+func roleTeamEntitlementUpdate(m interface{}, team_id int, roles []interface{}, remove bool) error {
 	client := m.(*awx.AWX)
 	awxService := client.TeamService
 
@@ -189,14 +189,14 @@ func resourceTeamUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		remove := oe.Difference(ne).List()
 		add := ne.Difference(oe).List()
 
-		err := roleEntitlementUpdate(m, id, remove, true)
+		err := roleTeamEntitlementUpdate(m, id, remove, true)
 		if err != nil {
 			return buildDiagnosticsMessage(
 				"Update: Failed To Update Team Role Entitlement",
 				"Failed to remove team role entitlement: got %s", err.Error(),
 			)
 		}
-		err = roleEntitlementUpdate(m, id, add, false)
+		err = roleTeamEntitlementUpdate(m, id, add, false)
 		if err != nil {
 			return buildDiagnosticsMessage(
 				"Update: Failed To Update Team Role Entitlement",

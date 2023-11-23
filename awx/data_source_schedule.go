@@ -73,6 +73,13 @@ func dataSourceSchedulesRead(ctx context.Context, d *schema.ResourceData, m inte
 			len(schedules),
 		)
 	}
+	if len(schedules) == 0 {
+		return buildDiagnosticsMessage(
+			"Get: Schedule does not exist",
+			"The Query Returns no Schedule matching filter %v",
+			params,
+		)
+	}
 
 	schedule := schedules[0]
 	d = setScheduleResourceData(d, schedule)

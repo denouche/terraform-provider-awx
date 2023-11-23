@@ -56,7 +56,6 @@ func dataSourceExecutionEnvironmentsRead(ctx context.Context, d *schema.Resource
 			"Get: Missing Parameters",
 			"Please use one of the selectors (name or group_id)",
 		)
-		return diags
 	}
 	executionEnvironments, _, err := client.ExecutionEnvironmentsService.ListExecutionEnvironments(params)
 	if err != nil {
@@ -72,7 +71,13 @@ func dataSourceExecutionEnvironmentsRead(ctx context.Context, d *schema.Resource
 			"The query returns more than one execution environment, %d",
 			len(executionEnvironments),
 		)
-		return diags
+	}
+	if len(executionEnvironments) == 0 {
+		return buildDiagnosticsMessage(
+			"Get: Execution Environment does not exist",
+			"The Query Returns no Execution Environment matching filter %v",
+			params,
+		)
 	}
 
 	executionEnvironment := executionEnvironments[0]
