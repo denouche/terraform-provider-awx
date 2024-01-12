@@ -32,16 +32,11 @@ import (
 func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceWorkflowJobTemplateScheduleCreate,
-		ReadContext:   resourceScheduleRead,
-		UpdateContext: resourceScheduleUpdate,
+		ReadContext:   resourceWorkflowJobTemplateScheduleRead,
+		UpdateContext: resourceWorkflowJobTemplateScheduleUpdate,
 		DeleteContext: resourceScheduleDelete,
-		Schema: map[string]*schema.Schema{
 
-			"workflow_job_template_id": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "The workflow_job_template id for this schedule",
-			},
+		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -50,9 +45,11 @@ func resourceWorkflowJobTemplateSchedule() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"unified_job_template_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
+			"workflow_job_template_id": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The workflow_job_template id for this schedule",
 			},
 			"description": {
 				Type:     schema.TypeString,
@@ -105,4 +102,70 @@ func resourceWorkflowJobTemplateScheduleCreate(ctx context.Context, d *schema.Re
 
 	d.SetId(strconv.Itoa(result.ID))
 	return resourceScheduleRead(ctx, d, m)
+}
+
+func resourceWorkflowJobTemplateScheduleUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	client := m.(*awx.AWX)
+	awxService := client.ScheduleService
+	id, diags := convertStateIDToNummeric("Update Schedule", d)
+	if diags.HasError() {
+		return diags
+	}
+
+	params := make(map[string]string)
+	_, err := awxService.GetByID(id, params)
+	if err != nil {
+		return buildDiagNotFoundFail("schedule", id, err)
+	}
+
+	_, err = awxService.Update(id, map[string]interface{}{
+		"name":                  d.Get("name").(string),
+		"rrule":                 d.Get("rrule").(string),
+		"workflow_job_template": d.Get("workflow_job_template_id").(int),
+		"description":           d.Get("description").(string),
+		"enabled":               d.Get("enabled").(bool),
+		"inventory":             d.Get("inventory").(string),
+		"extra_data":            unmarshalYaml(d.Get("extra_data").(string)),
+	}, map[string]string{})
+	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Unable to update Schedule",
+			Detail:   fmt.Sprintf("Schedule with name %s failed to update %s", d.Get("name").(string), err.Error()),
+		})
+		return diags
+	}
+
+	return resourceScheduleRead(ctx, d, m)
+}
+
+func resourceWorkflowJobTemplateScheduleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	client := m.(*awx.AWX)
+	awxService := client.ScheduleService
+	id, diags := convertStateIDToNummeric("Read schedule", d)
+	if diags.HasError() {
+		return diags
+	}
+
+	res, err := awxService.GetByID(id, make(map[string]string))
+	if err != nil {
+		return buildDiagNotFoundFail("schedule", id, err)
+	}
+	d = setWorkflowJobTemplateScheduleResourceData(d, res)
+	return nil
+}
+
+func setWorkflowJobTemplateScheduleResourceData(d *schema.ResourceData, r *awx.Schedule) *schema.ResourceData {
+	d.Set("name", r.Name)
+	d.Set("rrule", r.Rrule)
+	// Map api to state
+	d.Set("workflow_job_template_id", r.UnifiedJobTemplate)
+	d.Set("description", r.Description)
+	d.Set("enabled", r.Enabled)
+	d.Set("inventory", r.Inventory)
+	d.Set("extra_data", marshalYaml(r.ExtraData))
+	d.SetId(strconv.Itoa(r.ID))
+	return d
 }
