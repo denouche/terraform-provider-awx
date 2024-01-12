@@ -47,6 +47,7 @@ func resourceSchedule() *schema.Resource {
 			"unified_job_template_id": {
 				Type:     schema.TypeInt,
 				Required: true,
+				ForceNew: true,
 			},
 			"description": {
 				Type:     schema.TypeString,
