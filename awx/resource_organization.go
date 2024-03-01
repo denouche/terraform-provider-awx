@@ -1,14 +1,15 @@
 /*
 *TBD*
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "awx_organization" "default" {
-  name            = "acc-test"
-}
-```
 
+	resource "awx_organization" "default" {
+	  name            = "acc-test"
+	}
+
+```
 */
 package awx
 
@@ -87,8 +88,8 @@ func resourceOrganizationsCreate(ctx context.Context, d *schema.ResourceData, m 
 		log.Printf("Fail to Create Organization %v", err)
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "Unable to create Organizations",
-			Detail:   fmt.Sprintf("Organizations with name %s in the project id %d, failed to create %s", d.Get("name").(string), d.Get("project_id").(int), err.Error()),
+			Summary:  "Unable to create organization",
+			Detail:   fmt.Sprintf("Failed to create organization with name %s, got %s", d.Get("name").(string), err.Error()),
 		})
 		return diags
 	}
