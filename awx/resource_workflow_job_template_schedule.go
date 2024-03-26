@@ -120,13 +120,13 @@ func resourceWorkflowJobTemplateScheduleUpdate(ctx context.Context, d *schema.Re
 	}
 
 	_, err = awxService.Update(id, map[string]interface{}{
-		"name":                  d.Get("name").(string),
-		"rrule":                 d.Get("rrule").(string),
-		"workflow_job_template": d.Get("workflow_job_template_id").(int),
-		"description":           d.Get("description").(string),
-		"enabled":               d.Get("enabled").(bool),
-		"inventory":             d.Get("inventory").(string),
-		"extra_data":            unmarshalYaml(d.Get("extra_data").(string)),
+		"name":                 d.Get("name").(string),
+		"rrule":                d.Get("rrule").(string),
+		"unified_job_template": d.Get("workflow_job_template_id").(int),
+		"description":          d.Get("description").(string),
+		"enabled":              d.Get("enabled").(bool),
+		"inventory":            d.Get("inventory").(string),
+		"extra_data":           unmarshalYaml(d.Get("extra_data").(string)),
 	}, map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
