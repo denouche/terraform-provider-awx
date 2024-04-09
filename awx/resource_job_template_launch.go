@@ -85,6 +85,9 @@ func resourceJobTemplateLaunch() *schema.Resource {
 				ForceNew:    true,
 			},
 		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+		},
 	}
 }
 
