@@ -53,9 +53,9 @@ func resourceOrganization() *schema.Resource {
 				Description: "Local absolute file path containing a custom Python virtualenv to use",
 			},
 			"default_environment": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     0,
+                Default:     "",
 				Description: "The default execution environment for jobs run by this organization.",
 			},
 		},
@@ -81,7 +81,7 @@ func resourceOrganizationsCreate(ctx context.Context, d *schema.ResourceData, m 
 		"description":         d.Get("description").(string),
 		"max_hosts":           d.Get("max_hosts").(int),
 		"custom_virtualenv":   d.Get("description").(string),
-		"default_environment": d.Get("default_environment").(int),
+		"default_environment": d.Get("default_environment").(string),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Organization %v", err)
@@ -118,7 +118,7 @@ func resourceOrganizationsUpdate(ctx context.Context, d *schema.ResourceData, m 
 		"description":         d.Get("description").(string),
 		"max_hosts":           d.Get("max_hosts").(int),
 		"custom_virtualenv":   d.Get("description").(string),
-		"default_environment": d.Get("default_environment").(int),
+		"default_environment": d.Get("default_environment").(string),
 	}, map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
