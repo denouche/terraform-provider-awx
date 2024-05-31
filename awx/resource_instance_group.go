@@ -40,12 +40,12 @@ func resourceInstanceGroup() *schema.Resource {
 			"policy_instance_minimum": {
 				Type:     schema.TypeInt,
 				Optional: true,
-				Default:  0,
+				Default:  nil,
 			},
 			"policy_instance_percentage": {
 				Type:     schema.TypeInt,
 				Optional: true,
-				Default:  0,
+				Default:  nil,
 			},
 			"pod_spec_override": {
 				Type:      schema.TypeString,
@@ -89,19 +89,26 @@ func resourceInstanceGroupUpdate(ctx context.Context, d *schema.ResourceData, m 
 		return diags
 	}
 
-	_, err := awxService.UpdateInstanceGroup(id, map[string]interface{}{
-		"name":                       d.Get("name").(string),
-		"policy_instance_minimum":    d.Get("policy_instance_minimum").(int),
-		"is_container_group":         d.Get("is_container_group").(bool),
-		"policy_instance_percentage": d.Get("policy_instance_percentage").(int),
-		"pod_spec_override":          d.Get("pod_spec_override").(string),
-	}, nil)
+	updateData := map[string]interface{}{
+		"name":              d.Get("name").(string),
+		"is_container_group": d.Get("is_container_group").(bool),
+		"pod_spec_override": d.Get("pod_spec_override").(string),
+	}
+
+	if v, ok := d.GetOk("policy_instance_minimum"); ok {
+		updateData["policy_instance_minimum"] = v.(int)
+	}
+
+	if v, ok := d.GetOk("policy_instance_percentage"); ok {
+		updateData["policy_instance_percentage"] = v.(int)
+	}
+
+	_, err := awxService.UpdateInstanceGroup(id, updateData, nil)
 	if err != nil {
 		return buildDiagUpdateFail(diagElementInstanceGroupTitle, id, err)
 	}
 
 	return resourceInstanceGroupRead(ctx, d, m)
-
 }
 
 func resourceInstanceGroupDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
