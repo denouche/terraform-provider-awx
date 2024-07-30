@@ -93,6 +93,7 @@ func Provider() *schema.Provider {
 			"awx_inventory":                  dataSourceInventory(),
 			"awx_inventory_role":             dataSourceInventoryRole(),
 			"awx_job_template":               dataSourceJobTemplate(),
+			"awx_job_template_role":          dataSourceJobTemplateRole(),
 			"awx_notification_template":      dataSourceNotificationTemplate(),
 			"awx_organization":               dataSourceOrganization(),
 			"awx_organization_role":          dataSourceOrganizationRole(),
