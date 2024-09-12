@@ -50,6 +50,7 @@ The following arguments are supported:
 * `custom_virtualenv` - (Optional) 
 * `description` - (Optional) 
 * `diff_mode` - (Optional) 
+* `execution_environment` - (Optional) 
 * `extra_vars` - (Optional) 
 * `force_handlers` - (Optional) 
 * `forks` - (Optional) 

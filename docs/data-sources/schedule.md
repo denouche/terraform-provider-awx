@@ -6,7 +6,7 @@ description: |-
   *TBD*
 ---
 
-# awx_inventory
+# awx_schedule
 
 *TBD*
 

@@ -31,6 +31,8 @@ The following arguments are supported:
 * `instance_filters` - (Optional) 
 * `overwrite_vars` - (Optional) 
 * `overwrite` - (Optional) 
+* `source_path` - (Optional) 
+* `source_project_id` - (Optional) 
 * `source_regions` - (Optional) 
 * `source_vars` - (Optional) 
 * `source` - (Optional) 

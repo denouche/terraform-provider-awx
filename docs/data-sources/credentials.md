@@ -27,6 +27,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `credentials` - 
+  * `description` - 
   * `id` - 
   * `kind` - 
+  * `name` - 
   * `username` - 

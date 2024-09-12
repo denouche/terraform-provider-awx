@@ -28,7 +28,7 @@ data "awx_inventory_role" "inv_admin_role" {
 
 The following arguments are supported:
 
-* `inventory_id` - (Required) ID of the inventory to reference for inventory roles
-* `id` - (Optional)
-* `name` - (Optional)
+* `inventory_id` - (Required) 
+* `id` - (Optional) 
+* `name` - (Optional) 
 
