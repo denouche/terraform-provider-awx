@@ -1,19 +1,19 @@
 ---
 layout: "awx"
-page_title: "AWX: awx_team"
-sidebar_current: "docs-awx-datasource-team"
+page_title: "AWX: awx_execution_environment"
+sidebar_current: "docs-awx-datasource-execution_environment"
 description: |-
   *TBD*
 ---
 
-# awx_team
+# awx_execution_environment
 
 *TBD*
 
 ## Example Usage
 
 ```hcl
-data "awx_team" "default" {
+data "awx_execution_environment" "default" {
   name = "Default"
 }
 ```

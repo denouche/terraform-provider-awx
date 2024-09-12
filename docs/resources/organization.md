@@ -14,7 +14,7 @@ description: |-
 
 ```hcl
 resource "awx_organization" "default" {
-  name            = "acc-test"
+    name            = "acc-test"
 }
 ```
 
@@ -24,6 +24,7 @@ The following arguments are supported:
 
 * `name` - (Required) 
 * `custom_virtualenv` - (Optional) Local absolute file path containing a custom Python virtualenv to use
+* `default_environment` - (Optional) The default execution environment for jobs run by this organization.
 * `description` - (Optional) 
 * `max_hosts` - (Optional) Maximum number of hosts allowed to be managed by this organization
 

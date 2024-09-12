@@ -52,8 +52,12 @@ resource "awx_team" "admins_team" {
 
 The following arguments are supported:
 
-* `name` - (Required) Name of this team
-* `organization_id` - (Required) Numeric ID of the team organization
-* `description` - (Optional) Optional description of this team
-* `role_entitlement` - (Optional) Set of role IDs for access by this team
+* `name` - (Required) Name of this Team
+* `organization_id` - (Required) Numeric ID of the Team organization
+* `description` - (Optional) Optional description of this Team.
+* `role_entitlement` - (Optional) Set of role IDs of the role entitlements
+
+The `role_entitlement` object supports the following:
+
+* `role_id` - (Required) ************************* Please input Description for Schema ************************* 
 

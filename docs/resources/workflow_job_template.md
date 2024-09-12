@@ -31,7 +31,7 @@ The following arguments are supported:
 * `ask_scm_branch_on_launch` - (Optional) 
 * `ask_variables_on_launch` - (Optional) 
 * `description` - (Optional) Optional description of this workflow job template.
-* `inventory_id` - (Optional) Inventory applied as a prompt, assuming job template prompts for inventory.
+* `inventory_id` - (Optional) Inventory applied as a prompt, assuming job template prompts for inventory. (id, default=``)
 * `limit` - (Optional) 
 * `organization_id` - (Optional) The organization used to determine access to this template. (id, default=``)
 * `scm_branch` - (Optional) 

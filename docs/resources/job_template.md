@@ -13,16 +13,25 @@ description: |-
 ## Example Usage
 
 ```hcl
+
+data "awx_organization" "default" {
+  name = "Default"
+}
+
 data "awx_inventory" "default" {
   name            = "private_services"
   organization_id = data.awx_organization.default.id
+}
+
+data "awx_project" "default" {
+  name = "Default"
 }
 
 resource "awx_job_template" "baseconfig" {
   name           = "baseconfig"
   job_type       = "run"
   inventory_id   = data.awx_inventory.default.id
-  project_id     = awx_project.base_service_config.id
+  project_id     = data.awx_project.default.id
   playbook       = "master-configure-system.yml"
   become_enabled = true
 }
@@ -50,6 +59,7 @@ The following arguments are supported:
 * `custom_virtualenv` - (Optional) 
 * `description` - (Optional) 
 * `diff_mode` - (Optional) 
+* `execution_environment` - (Optional) 
 * `extra_vars` - (Optional) 
 * `force_handlers` - (Optional) 
 * `forks` - (Optional) 

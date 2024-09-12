@@ -1,7 +1,7 @@
 ---
 layout: "awx"
 page_title: "AWX: awx_notification_template"
-sidebar_current: "docs-awx-resource-notification-template"
+sidebar_current: "docs-awx-resource-notification_template"
 description: |-
   *TBD*
 ---
@@ -14,9 +14,7 @@ description: |-
 
 ```hcl
 resource "awx_notification_template" "default" {
-    name                      = "schedule-test"
-    notification_type         = "webhook"
-    organization_id           = data.awx_organization.default.id
+  name                      = "notification_template-test"
 }
 ```
 
@@ -29,3 +27,4 @@ The following arguments are supported:
 * `organization_id` - (Required) 
 * `description` - (Optional) 
 * `notification_configuration` - (Optional) 
+

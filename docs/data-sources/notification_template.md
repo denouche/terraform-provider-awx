@@ -1,12 +1,12 @@
 ---
 layout: "awx"
 page_title: "AWX: awx_notification_template"
-sidebar_current: "docs-awx-datasource-notification-template"
+sidebar_current: "docs-awx-datasource-notification_template"
 description: |-
   *TBD*
 ---
 
-# awx_inventory
+# awx_notification_template
 
 *TBD*
 
