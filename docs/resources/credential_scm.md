@@ -13,7 +13,17 @@ description: |-
 ## Example Usage
 
 ```hcl
-*TBD*
+data "awx_organization" "default" {
+  name = "Default"
+}
+
+resource "awx_credential_scm" "credential" {
+  name            = "SCM Token"
+  description     = "Token to access repo at [...]"
+  organization_id = data.awx_organization.default.id
+  username        = "Username"
+  password        = "Password"
+}
 ```
 
 ## Argument Reference

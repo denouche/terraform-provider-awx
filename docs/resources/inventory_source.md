@@ -13,7 +13,26 @@ description: |-
 ## Example Usage
 
 ```hcl
-*TBD*
+data "awx_organization" "default" {
+  name = "Default"
+}
+
+data "awx_inventory" "default" {
+  name            = "private_services"
+  organization_id = data.awx_organization.default.id
+}
+
+data "awx_project" "default" {
+  name = "Default"
+}
+
+resource "awx_inventory_source" "inventory_source" {
+  name              = "hosts"
+  inventory_id      = data.awx_inventory.default.id
+  source            = "scm"
+  source_project_id = data.awx_project.default.id
+  source_path       = "inventory.yml"
+}
 ```
 
 ## Argument Reference
