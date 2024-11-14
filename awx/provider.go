@@ -61,6 +61,7 @@ func Provider() *schema.Provider {
 			"awx_job_template_credential":                             resourceJobTemplateCredentials(),
 			"awx_job_template":                                        resourceJobTemplate(),
 			"awx_job_template_launch":                                 resourceJobTemplateLaunch(),
+			"awx_workflow_job_template_launch":                        resourceWorkflowJobTeamplateLaunch(),
 			"awx_job_template_notification_template_error":            resourceJobTemplateNotificationTemplateError(),
 			"awx_job_template_notification_template_started":          resourceJobTemplateNotificationTemplateStarted(),
 			"awx_job_template_notification_template_success":          resourceJobTemplateNotificationTemplateSuccess(),
