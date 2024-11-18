@@ -44,7 +44,7 @@ func resourceWorkflowJobTeamplateLaunch() *schema.Resource {
 			"extra_vars": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Override job template variables. YAML or JSON values are supported.",
+				Description: "Override workflow job template variables. YAML or JSON values are supported.",
 				ForceNew:    true,
 				StateFunc:   normalizeJsonYaml,
 			},
@@ -53,7 +53,7 @@ func resourceWorkflowJobTeamplateLaunch() *schema.Resource {
 				Required:    false,
 				Optional:    true,
 				Default:     false,
-				Description: "Resource creation will wait for job completion.",
+				Description: "Resource creation will wait for workflow job completion.",
 				ForceNew:    true,
 			},
 		},
@@ -88,7 +88,7 @@ func workflowJobTemplateLaunchWait(ctx context.Context, svc *awx.WorkflowJobServ
 	return err
 }
 
-// WorkflokJobTemplateLaunchData provides payload data used by the JobTemplateLaunch method
+// WorkflokJobTemplateLaunchData provides payload data used by the WorkflowJobTemplateLaunch method
 type WorkflokJobTemplateLaunchData struct {
 	ExtraVars string `json:"extra_vars,omitempty"`
 }
@@ -115,7 +115,7 @@ func resourceWorkflowJobTeamplateLaunchCreate(ctx context.Context, d *schema.Res
 
 	res, err := awxService.Launch(workflowJobTemplateID, iData, map[string]string{})
 	if err != nil {
-		log.Printf("Failed to create Template Launch %v", err)
+		log.Printf("Failed to create Workflow Template Launch %v", err)
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "Unable to create workflowJobTemplate",
