@@ -24,7 +24,6 @@ package awx
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 
 	awx "github.com/denouche/goawx/client"
@@ -36,6 +35,7 @@ func resourceOrganizationInstanceGroup() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceOrganizationInstanceGroupCreate,
 		DeleteContext: resourceOrganizationInstanceGroupDelete,
+        ReadContext:   resourceOrganizationInstanceGroupRead,
 
 		Schema: map[string]*schema.Schema{
 			"organization_id": {
@@ -50,6 +50,11 @@ func resourceOrganizationInstanceGroup() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceOrganizationInstanceGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	return diags
 }
 
 func resourceOrganizationInstanceGroupCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
