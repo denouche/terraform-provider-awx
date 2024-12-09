@@ -66,6 +66,7 @@ func Provider() *schema.Provider {
 			"awx_job_template_notification_template_success":          resourceJobTemplateNotificationTemplateSuccess(),
 			"awx_notification_template":                               resourceNotificationTemplate(),
 			"awx_organization":                                        resourceOrganization(),
+			"awx_organization_instance_group":                         resourceOrganizationInstanceGroup(),
 			"awx_organization_galaxy_credential":                      resourceOrganizationsGalaxyCredentials(),
 			"awx_project":                                             resourceProject(),
 			"awx_schedule":                                            resourceSchedule(),
