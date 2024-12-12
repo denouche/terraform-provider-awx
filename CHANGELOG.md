@@ -1,3 +1,10 @@
+# [0.28.0](https://github.com/denouche/terraform-provider-awx/compare/v0.27.0...v0.28.0) (2024-12-10)
+
+
+### Features
+
+* link instance group with organization ([#85](https://github.com/denouche/terraform-provider-awx/issues/85)) ([21dbb14](https://github.com/denouche/terraform-provider-awx/commit/21dbb1492ff66a07002d1898eb3d7588158b3ee3))
+
 # [0.27.0](https://github.com/denouche/terraform-provider-awx/compare/v0.26.1...v0.27.0) (2024-05-31)
 
 
