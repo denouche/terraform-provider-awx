@@ -101,6 +101,8 @@ github.com/denouche/goawx v0.20.1 h1:Mnkk1QxGPBvo3U4FDhcdHFrSMwIT+IwAkLDVQ7dCAoc
 github.com/denouche/goawx v0.20.1/go.mod h1:MppzSteoj2xgfiqiRWW/Bf1a8z2FrRyvah1z0J2vJTY=
 github.com/denouche/goawx v0.21.1 h1:ImTBH6/L3u8QInlPHMWO02su4lQPHudj52ZvwKeL86A=
 github.com/denouche/goawx v0.21.1/go.mod h1:Bdo/LeUgeemE9Xt4bOVFVO6GJMxxUcduhQPDD5+yQ1A=
+github.com/denouche/goawx v0.22.0 h1:P5ReudHwkBNrfiK2jbY10U0uFxCNyvEpw4x9u3wAcq0=
+github.com/denouche/goawx v0.22.0/go.mod h1:Bdo/LeUgeemE9Xt4bOVFVO6GJMxxUcduhQPDD5+yQ1A=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dimchansky/utfbom v1.1.0/go.mod h1:rO41eb7gLfo8SF1jd9F8HplJm1Fewwi4mQvIirEdv+8=
 github.com/dnaeon/go-vcr v1.0.1/go.mod h1:aBB1+wY4s93YsC3HHjMBMrwTj2R9FHDzUr9KyGc8n1E=
