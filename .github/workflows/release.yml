@@ -29,46 +29,17 @@ jobs:
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
 
-      - name: Release
-        id: release
-        uses: cycjimmy/semantic-release-action@v4
-        with:
-          branches: |
-            [
-              'main'
-            ]
-          extra_plugins: |
-            @semantic-release/commit-analyzer@12.0.0
-            @semantic-release/release-notes-generator@13.0.0
-            @semantic-release/changelog@6.0.3
-            @semantic-release/git@10.0.1
-            @semantic-release/github@10.0.5
-        env:
-          GIT_CREDENTIALS: git:${{ secrets.PAT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Set up Go
         if: steps.release.outputs.new_release_published == 'true'
         uses: actions/setup-go@v5
         with:
           go-version: '1.20'
 
-      - name: Import GPG key
-        if: steps.release.outputs.new_release_published == 'true'
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          # These secrets will need to be configured for the repository:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+      - name: Get dependencies
+        run: |
+          go mod download
 
-      - name: Run GoReleaser
-        if: steps.release.outputs.new_release_published == 'true'
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          version: '~> v1'
-          args: release --clean
-        env:
-          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
-          # GitHub sets this automatically
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        run: |
+          make lint
+          go build
