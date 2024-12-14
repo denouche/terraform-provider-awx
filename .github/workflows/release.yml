@@ -7,6 +7,7 @@
 # in `goreleaser` to indicate this is being used in a non-interactive mode.
 #
 name: Release
+
 on:
   workflow_dispatch:
   push:
@@ -14,10 +15,14 @@ on:
       - 'main'
     tags-ignore:
       - '**'
+
 jobs:
+
   release:
+
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -56,6 +61,7 @@ jobs:
           # These secrets will need to be configured for the repository:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
+
       - name: Run GoReleaser
         if: steps.release.outputs.new_release_published == 'true'
         uses: goreleaser/goreleaser-action@v5
