@@ -201,6 +201,11 @@ func resourceJobTemplate() *schema.Resource {
 				Optional: true,
 				Default:  "",
 			},
+			"instanceGroups": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
 		},
 	}
 }
@@ -243,6 +248,7 @@ func resourceJobTemplateCreate(ctx context.Context, d *schema.ResourceData, m in
 		"allow_simultaneous":       d.Get("allow_simultaneous").(bool),
 		"custom_virtualenv":        AtoipOr(d.Get("custom_virtualenv").(string), nil),
 		"execution_environment":    AtoipOr(d.Get("execution_environment").(string), nil),
+		"instanceGroups":           d.Get("instanceGroups").(string),
 	}, map[string]string{})
 	if err != nil {
 		log.Printf("Fail to Create Template %v", err)
@@ -306,6 +312,7 @@ func resourceJobTemplateUpdate(ctx context.Context, d *schema.ResourceData, m in
 		"allow_simultaneous":       d.Get("allow_simultaneous").(bool),
 		"custom_virtualenv":        AtoipOr(d.Get("custom_virtualenv").(string), nil),
 		"execution_environment":    AtoipOr(d.Get("execution_environment").(string), nil),
+		"instanceGroups":           d.Get("instanceGroups").(string),
 	}, map[string]string{})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -366,5 +373,6 @@ func setJobTemplateResourceData(d *schema.ResourceData, r *awx.JobTemplate) *sch
 	d.Set("survey_enabled", r.SurveyEnabled)
 	d.Set("verbosity", r.Verbosity)
 	d.SetId(strconv.Itoa(r.ID))
+	d.Set("instanceGroups", r.InstanceGroups)
 	return d
 }
