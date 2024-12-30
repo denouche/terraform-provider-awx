@@ -20,7 +20,7 @@ cd ./tools && go run mage.go -v reCreate && cd ..
 1. Ensure [GoReleaser](https://goreleaser.com/install/) is installed
 2. Run build command:
 ```sh
-goreleaser build --snapshot --rm-dist
+goreleaser build --snapshot --clean
 ```
 
 ### 3) Copy Provider
