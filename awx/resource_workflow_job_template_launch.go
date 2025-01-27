@@ -7,6 +7,7 @@ Example Usage
 resource "awx_workflow_job_template_launch" "now" {
   workflow_job_template_id = someid
   wait_for_completion = true
+  limit = "host1"
 }
 ```
 
@@ -56,6 +57,12 @@ func resourceWorkflowJobTeamplateLaunch() *schema.Resource {
 				Description: "Resource creation will wait for workflow job completion.",
 				ForceNew:    true,
 			},
+			"limit": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Limit the workflow execution to specific hosts.",
+				ForceNew:    true,
+			},
 		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
@@ -91,6 +98,7 @@ func workflowJobTemplateLaunchWait(ctx context.Context, svc *awx.WorkflowJobServ
 // WorkflokJobTemplateLaunchData provides payload data used by the WorkflowJobTemplateLaunch method
 type WorkflokJobTemplateLaunchData struct {
 	ExtraVars string `json:"extra_vars,omitempty"`
+	Limit     string `json:"limit,omitempty"`
 }
 
 func resourceWorkflowJobTeamplateLaunchCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -107,6 +115,7 @@ func resourceWorkflowJobTeamplateLaunchCreate(ctx context.Context, d *schema.Res
 
 	data := WorkflokJobTemplateLaunchData{
 		ExtraVars: d.Get("extra_vars").(string),
+		Limit:     d.Get("limit").(string),
 	}
 
 	var iData map[string]interface{}
