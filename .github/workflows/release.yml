@@ -30,7 +30,7 @@ jobs:
           export VERSION=$(cat VERSION)
           echo "Publishing tag $VERSION for release."
           git tag $VERSION
-          git push https://git:${{ secrets.GITHUB_TOKEN }}@github.com/josh-silvas/terraform-provider-awx $VERSION
+          git push origin $VERSION
 
   goreleaser:
     runs-on: "ubuntu-latest"
