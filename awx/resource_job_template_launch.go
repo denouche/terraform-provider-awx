@@ -175,14 +175,23 @@ func resourceJobRead(ctx context.Context, d *schema.ResourceData, m interface{})
 	return diags
 }
 
+// resourceJobDelete only forgets the launch: the job stays in AWX's history.
+// AWX's job cleanup purges old jobs, so a job that is already gone (404) is
+// treated as deleted rather than failing the destroy, which would otherwise
+// block every replacement of a launch older than the cleanup window.
 func resourceJobDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
 	client := m.(*awx.AWX)
 	awxService := client.JobService
 	jobID, diags := convertStateIDToNummeric("Delete Job", d)
+	if diags.HasError() {
+		return diags
+	}
 	_, err := awxService.GetJob(jobID, map[string]string{})
 	if err != nil {
-		return buildDiagNotFoundFail("job", jobID, err)
+		if !isNotFoundError(err) {
+			return buildDiagNotFoundFail("job", jobID, err)
+		}
+		log.Printf("[WARN] job %d no longer exists in AWX, removing the launch from state", jobID)
 	}
 
 	d.SetId("")
