@@ -110,36 +110,35 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	hostname := d.Get("hostname").(string)
-	username := d.Get("username").(string)
-	password := d.Get("password").(string)
-	token := d.Get("token").(string)
+	c, err := newAWXClient(
+		d.Get("hostname").(string),
+		d.Get("username").(string),
+		d.Get("password").(string),
+		d.Get("token").(string),
+		d.Get("insecure").(bool),
+	)
+	if err != nil {
+		return nil, diag.Diagnostics{{
+			Severity: diag.Error,
+			Summary:  "Unable to create AWX client",
+			Detail:   "Unable to auth user against AWX API: check the hostname, username and password",
+		}}
+	}
+	return c, nil
+}
 
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
+// newAWXClient builds the AWX client shared by the SDKv2 provider and the
+// plugin-framework provider, so both authenticate the same way.
+func newAWXClient(hostname, username, password, token string, insecure bool) (*awx.AWX, error) {
 	client := http.DefaultClient
-	if d.Get("insecure").(bool) {
+	if insecure {
 		customTransport := http.DefaultTransport.(*http.Transport).Clone()
 		customTransport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		client.Transport = customTransport
 	}
 
-	var c *awx.AWX
-	var err error
 	if token != "" {
-		c, err = awx.NewAWXToken(hostname, token, client)
-	} else {
-		c, err = awx.NewAWX(hostname, username, password, client)
+		return awx.NewAWXToken(hostname, token, client)
 	}
-	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "Unable to create AWX client",
-			Detail:   "Unable to auth user against AWX API: check the hostname, username and password",
-		})
-		return nil, diags
-	}
-
-	return c, diags
+	return awx.NewAWX(hostname, username, password, client)
 }
