@@ -91,27 +91,45 @@ func resourceJobTemplateLaunch() *schema.Resource {
 	}
 }
 
-func statusInstanceState(ctx context.Context, svc *awx.JobService, id int) retry.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		output, err := svc.GetJob(id, map[string]string{})
-		return output, output.Status, err
-	}
-}
+// jobPollDelay and jobPollMinTimeout pace waitForJob; tests shorten them.
+var (
+	jobPollDelay      = 10 * time.Second
+	jobPollMinTimeout = 3 * time.Second
+)
 
-func jobTemplateLaunchWait(ctx context.Context, svc *awx.JobService, job *awx.JobLaunch, timeout time.Duration) error {
-
+// waitForJob polls the job until it succeeds, fails or the timeout passes.
+// onStatus, if set, is called whenever the job's status changes.
+func waitForJob(ctx context.Context, svc *awx.JobService, id int, timeout time.Duration, onStatus func(status string)) error {
+	lastStatus := ""
 	stateConf := &retry.StateChangeConf{
-		Pending:    []string{"new", "pending", "waiting", "running"},
-		Target:     []string{"successful"},
-		Refresh:    statusInstanceState(ctx, svc, job.ID),
+		Pending: []string{"new", "pending", "waiting", "running"},
+		Target:  []string{"successful"},
+		Refresh: func() (interface{}, string, error) {
+			job, err := svc.GetJob(id, map[string]string{})
+			if err != nil {
+				return nil, "", err
+			}
+			if onStatus != nil && job.Status != lastStatus {
+				onStatus(job.Status)
+			}
+			lastStatus = job.Status
+			switch job.Status {
+			case "failed", "error", "canceled":
+				return job, job.Status, fmt.Errorf("job %d finished with status %q", id, job.Status)
+			}
+			return job, job.Status, nil
+		},
 		Timeout:    timeout,
-		Delay:      10 * time.Second,
-		MinTimeout: 3 * time.Second,
+		Delay:      jobPollDelay,
+		MinTimeout: jobPollMinTimeout,
 	}
 
 	_, err := stateConf.WaitForStateContext(ctx)
-
 	return err
+}
+
+func jobTemplateLaunchWait(ctx context.Context, svc *awx.JobService, job *awx.JobLaunch, timeout time.Duration) error {
+	return waitForJob(ctx, svc, job.ID, timeout, nil)
 }
 
 // JobTemplateLaunchData provides payload data used by the JobTemplateLaunch method
@@ -119,6 +137,20 @@ type JobTemplateLaunchData struct {
 	Limit       string `json:"limit,omitempty"`
 	InventoryID int    `json:"inventory,omitempty"`
 	ExtraVars   string `json:"extra_vars,omitempty"`
+}
+
+// launchJobTemplate launches a job from the template, shared by the
+// awx_job_template_launch resource and action.
+func launchJobTemplate(svc *awx.JobTemplateService, jobTemplateID int, data JobTemplateLaunchData) (*awx.JobLaunch, error) {
+	var payload map[string]interface{}
+	encoded, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal(encoded, &payload); err != nil {
+		return nil, err
+	}
+	return svc.Launch(jobTemplateID, payload, map[string]string{})
 }
 
 func resourceJobTemplateLaunchCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -133,17 +165,11 @@ func resourceJobTemplateLaunchCreate(ctx context.Context, d *schema.ResourceData
 		return buildDiagNotFoundFail("job template", jobTemplateID, err)
 	}
 
-	data := JobTemplateLaunchData{
+	res, err := launchJobTemplate(awxService, jobTemplateID, JobTemplateLaunchData{
 		Limit:       d.Get("limit").(string),
 		InventoryID: d.Get("inventory_id").(int),
 		ExtraVars:   d.Get("extra_vars").(string),
-	}
-
-	var iData map[string]interface{}
-	idata, _ := json.Marshal(data)
-	json.Unmarshal(idata, &iData)
-
-	res, err := awxService.Launch(jobTemplateID, iData, map[string]string{})
+	})
 	if err != nil {
 		log.Printf("Failed to create Template Launch %v", err)
 		diags = append(diags, diag.Diagnostic{
@@ -175,14 +201,23 @@ func resourceJobRead(ctx context.Context, d *schema.ResourceData, m interface{})
 	return diags
 }
 
+// resourceJobDelete only forgets the launch: the job stays in AWX's history.
+// AWX's job cleanup purges old jobs, so a job that is already gone (404) is
+// treated as deleted rather than failing the destroy, which would otherwise
+// block every replacement of a launch older than the cleanup window.
 func resourceJobDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
 	client := m.(*awx.AWX)
 	awxService := client.JobService
 	jobID, diags := convertStateIDToNummeric("Delete Job", d)
+	if diags.HasError() {
+		return diags
+	}
 	_, err := awxService.GetJob(jobID, map[string]string{})
 	if err != nil {
-		return buildDiagNotFoundFail("job", jobID, err)
+		if !isNotFoundError(err) {
+			return buildDiagNotFoundFail("job", jobID, err)
+		}
+		log.Printf("[WARN] job %d no longer exists in AWX, removing the launch from state", jobID)
 	}
 
 	d.SetId("")

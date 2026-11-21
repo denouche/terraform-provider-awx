@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	awx "github.com/denouche/goawx/client"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -185,4 +186,11 @@ func marshalYaml(v interface{}) string {
 		return string(extraDataBytes)
 	}
 	return ""
+}
+
+// isNotFoundError reports whether err is goawx's error for a 404 response.
+// goawx's CheckResponse returns an untyped error, "responsed with <code>, ...",
+// so the status code can only be read from its text.
+func isNotFoundError(err error) bool {
+	return err != nil && strings.HasPrefix(err.Error(), "responsed with 404")
 }
